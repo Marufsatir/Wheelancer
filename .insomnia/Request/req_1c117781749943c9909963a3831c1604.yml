@@ -1,26 +1,27 @@
-_id: req_ee543707aab947559257eeb992ca2463
+_id: req_1c117781749943c9909963a3831c1604
 type: Request
 parentId: wrk_91a6b8ad217c40ecabddee3b241f53db
-modified: 1651445841706
-created: 1651413502279
-url: http://localhost:3013/user/login
-name: Login
+modified: 1651445826108
+created: 1651444639316
+url: http://localhost:3013/user/checkverification
+name: Check Verification
 description: ""
 method: POST
 body:
   mimeType: application/json
   text: |-
     {
-      "email": "berk4652@gmail.com",
-      "password": "testtset"
+    	"code": "5633"
     }
 parameters: []
 headers:
   - name: Content-Type
     value: application/json
     id: pair_f011d119cd694a10a242be74e6031ac0
-authentication: {}
-metaSortKey: -1651413502279
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMCwidHlwZSI6MCwiaWF0IjoxNjUxNDQ1MzM1LCJleHAiOjE2NTE0NDU2MzV9.FVIV31yl6rppuoDuKb4BCW_L-ewvqeb67d-8P054sjY
+metaSortKey: -1651210419473.375
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true
