@@ -1,8 +1,543 @@
 _id: spc_ae6503094d7145b6bd3523fe2bc27916
 type: ApiSpec
 parentId: wrk_91a6b8ad217c40ecabddee3b241f53db
-modified: 1651413671040
+modified: 1651531017369
 created: 1651413373654
 fileName: Wheelancer
-contents: ""
+contents: >-
+  openapi: 3.0.0
+
+  info:
+    title: Wheelancer API with Swagger
+    version: '1.0'
+    description: "This is a simple CRUD API application made with Express and documented with Swagger 
+      <br><br><h1>AUTH PASS (🔑): admin
+      <br><br><h1>SUPER_AUTH PASS (🔑🦹‍♂️): superadmin for System API calls and Admin registration."
+  servers:
+    - url: http://wheelancer.hopto.org:3013/
+
+    
+
+  #---<<<<<<<<<<<<<<<<<<<<<<<<<<<USER>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+  components:
+    schemas:
+      User: 
+             type: object
+             required: 
+                 - username
+                 - email
+                 - name
+                 - password
+             properties:
+                 user_id:
+                     type: integer
+                 username:
+                     type: string
+                 name:
+                     type: string
+                 email:
+                     type: string
+                 biography:
+                     type: string
+                 password:
+                     type: string
+             example:
+                 username: Mahmut_03
+                 email: test@test.com
+                 name: Mahmut
+                 password: testtset
+
+    securitySchemes:
+      Test:
+        type: http
+        scheme: bearer
+      Super-Authorization:          
+        type: apiKey
+        name: super_auth
+        in: header
+        description: 'Super Special key for creating librarians => superadmin'  
+
+           
+  security:
+     - Authorization: []    
+
+  paths:
+
+  #---<<<<<<<<<<<<<<<<<<<<<<<<<<<System>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    /system/inserttuples:
+      post:
+        security:
+          - Super-Authorization: []
+        tags:
+          - "System"
+
+        description: Insert example tuples.
+        responses:
+          '200':
+            description: OK - Inserted
+          '500':
+            description: MYSQL ERROR.
+
+    /system/truncatetables:
+      delete:
+        security:
+          - Super-Authorization: []
+        tags:
+          - "System"
+
+        description: Truncate tables.
+        responses:
+          '200':
+            description: OK - Truncated.
+          '500':
+            description: MYSQL ERROR.
+
+    /system/inserttables:
+      post:
+        security:
+          - Super-Authorization: []
+        tags:
+          - "System"
+
+        description: <h1>Creates tables (Do not use until fully implemented)🧰.
+        responses:
+          '200':
+            description: OK - Inserted.
+          '500':
+            description: MYSQL ERROR.
+
+
+  #---<<<<<<<<<<<<<<<<<<<<<<<<<<<USER>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    /user/login:
+      post:
+        tags:
+          - "User-General"
+
+        description: User Login
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    username:
+                      type: string
+                    password:
+                      type: string
+                example:
+                 username: Mahmut_03
+                 password: testtset
+                
+        responses:
+          '200':
+            description: OK - Successfully logged in.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    user_id:
+                      type: integer
+                    token:
+                      type: string
+                    type:
+                      type: integer
+          '401':
+            description: Unauthorized - Wrong username or email.
+
+    /user/register:
+      post:
+        security:
+          - Super-Authorization: []
+          
+        tags:
+          - "User-General"
+
+        description: Registers the user. Super-Auth Key is required in order to register as Admin.
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                 user_id:
+                    type: integer
+                 username:
+                    type: string
+                 name:
+                    type: string
+                 email:
+                    type: string
+                 biography:
+                    type: string
+                 password:
+                    type: string
+                 type:
+                    type: integer
+                example:
+                 username: Mahmut_031
+                 email: test@test.com
+                 name: Mahmut
+                 password: testtset
+                 type: 1
+        responses:
+          '200':
+            description: OK - Successfully registered.
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    user_id:
+                      type: integer
+                    token:
+                      type: string
+                    type:
+                      type: integer
+          '406':
+            description: Not Acceptable - User with same username or email already exists.
+
+    /user/setbio:
+      put:
+        tags:
+          - "User-General"
+
+        description: Sets biography of a user
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    uid:
+                      type: integer
+                      format: user_id
+                      example: 1
+                    bio:
+                      type: string
+                      format: biography
+                      example: "My Biography"
+        responses:
+          '200':
+            description: OK - Successfully updated.
+          '401':
+            description: Unauthorized - Wrong username or email.
+
+    /user/setemail:
+      put:
+        tags:
+          - "User-General"
+
+        description: Sets email of a user
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    uid:
+                      type: integer
+                      format: user_id
+                      example: 1
+                    email:
+                      type: string
+                      format: email
+                      example: "new@mail.com"
+        responses:
+          '200':
+            description: OK - Successfully updated.
+          '401':
+            description: Unauthorized - Wrong username or email.
+
+    /user/addbalance:
+      put:
+        tags:
+          - "User-General"
+
+        description: Adds a specific amount to user's wallet.
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    uid:
+                      type: integer
+                      format: user_id
+                      example: 1
+                    amount:
+                      type: integer
+                      format: amount
+                      example: 100
+        responses:
+          '200':
+            description: OK - Successfull balance change.
+          '401':
+            description: Unauthorized - Wrong username or email.
+
+    /user/setpassword:
+      put:
+        tags:
+          - "User-General"
+
+        description: Sets password of a user
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    uid:
+                      type: integer
+                      format: user_id
+                      example: 1
+                    password:
+                      type: string
+                      format: password
+                      example: "as5f4as5df132"
+        responses:
+          '200':
+            description: OK - Successfully updated.
+          '401':
+            description: Unauthorized - Wrong username or email.
+
+    /user/setname:
+      put:
+        tags:
+          - "User-General"
+
+        description: Sets name of a user
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    uid:
+                      type: integer
+                      format: user_id
+                      example: 1
+                    name:
+                      type: string
+                      format: name
+                      example: "Mr.Wonka"
+        responses:
+          '200':
+            description: OK - Successfully updated.
+          '401':
+            description: Unauthorized - Wrong username or email.
+
+
+    /user/setusername:
+      put:
+        tags:
+          - "User-General"
+
+        description: Sets username of a user
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    uid:
+                      type: integer
+                      format: user_id
+                      example: 1
+                    username:
+                      type: string
+                      format: username
+                      example: "usn_a23s"
+        responses:
+          '200':
+            description: OK - Successfully updated.
+          '401':
+            description: Unauthorized - Wrong username or email.
+
+    /user/getunverifiedcouriers:
+      get:
+        tags:
+          - "User-Admin"
+
+        description: Gets unverified Couriers
+        parameters:
+          - in: query
+            name: uid
+            schema:
+              type: integer
+            description: Id of user
+            example: 1
+        responses:
+          '200':
+            description: OK - Successfully listed.
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    properties:
+                      user_id:
+                        type: integer
+                      user_name:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      biography:
+                        type: string   
+          '401':
+            description: Unauthorized - Token is expired or wrong.
+
+
+    /user/getverifiedcouriers:
+      get:
+        tags:
+          - "User-Admin"
+
+        description: Gets verified Couriers
+        parameters:
+          - in: query
+            name: uid
+            schema:
+              type: integer
+            description: Id of user
+            example: 1
+        responses:
+          '200':
+            description: OK - Successfully listed.
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    properties:
+                      user_id:
+                        type: integer
+                      user_name:
+                        type: string
+                      name:
+                        type: string
+                      email:
+                        type: string
+                      biography:
+                        type: string   
+          '401':
+            description: Unauthorized - Token is expired or wrong.
+
+    /user/verifycourier:
+      put:
+        tags:
+          - "User-Admin"
+        description: For verifying the courier
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                    uid:
+                      type: integer
+                      format: user_id
+                      example: 15
+                    courier_id:
+                      type: integer
+                      format: courier_id
+                      example: 3
+        responses:
+          '200':
+            description: OK - Successfully verified.
+          '401':
+            description: Unauthorized - Wrong username or email.
+
+
+  #---<<<<<<<<<<<<<<<<<<<<<<<<<<<Transport>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    /transport/alltransports:
+      get:
+        tags:
+          - "Transport"
+
+        description: Listing All Transports
+        responses:
+          '200':
+            description: OK - Listed
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                      properties:
+                        tid:
+                          type: string
+                        customer_id:
+                          type: integer
+                        courier_id:
+                          type: integer
+                        cargo_size:
+                          type: integer
+                        cargo_weight:
+                          type: integer
+                        creation_date:
+                          type: string
+                        departure_cords:
+                          type: string
+                        arrival_cords:
+                          type: string
+                        
+          '401':
+            description: Unauthorized - Token is expired or wrong.
+
+    /transport/mytransports:
+      get:
+        tags:
+          - "User-Customer"
+        description: Listing customer's transports
+        parameters:
+          - in: query
+            name: uid
+            schema:
+              type: integer
+            description: Id of user
+            example: 1
+        responses:
+          '200':
+            description: OK - Listed
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                      properties:
+                        tid:
+                          type: string
+                        customer_id:
+                          type: integer
+                        courier_id:
+                          type: integer
+                        cargo_size:
+                          type: integer
+                        cargo_weight:
+                          type: integer
+                        creation_date:
+                          type: string
+                        departure_cords:
+                          type: string
+                        arrival_cords:
+                          type: string
+                        
+          '401':
+            description: Unauthorized - Token is expired or wrong.
 contentType: yaml

@@ -1,0 +1,27 @@
+_id: req_97b6fc3ea9e44779b4b9e59d67f04f38
+type: Request
+parentId: fld_bcf7a0e7ea584af4bf040dc57529de16
+modified: 1651531066150
+created: 1651516893273
+url: http://wheelancer.hopto.org:3013/package/customerpackage
+name: Get Customer's Single Package
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_e814120f1fd64db28330b7a6aaf52732
+    name: package_id
+    value: "1"
+    description: ""
+headers: []
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMCwidHlwZSI6MCwiaWF0IjoxNjUxNTMwODY0LCJleHAiOjE2NTE1MzExNjR9.Vr37RfvQf8lpNkr4mReEUyEzKsPorUDDVt_LjXvGpcI
+metaSortKey: -1651210419473.375
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

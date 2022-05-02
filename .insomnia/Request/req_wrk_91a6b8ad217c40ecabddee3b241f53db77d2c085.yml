@@ -1,0 +1,21 @@
+_id: req_wrk_91a6b8ad217c40ecabddee3b241f53db77d2c085
+type: Request
+parentId: wrk_91a6b8ad217c40ecabddee3b241f53db
+modified: 1651508933111
+created: 1651508933111
+url: "{{ base_url }}/transport/alltransports"
+name: /transport/alltransports
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication: {}
+metaSortKey: -1651508933111
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

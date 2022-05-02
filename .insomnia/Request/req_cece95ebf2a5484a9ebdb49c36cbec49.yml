@@ -1,0 +1,33 @@
+_id: req_cece95ebf2a5484a9ebdb49c36cbec49
+type: Request
+parentId: fld_bcf7a0e7ea584af4bf040dc57529de16
+modified: 1651532686946
+created: 1651531027068
+url: http://wheelancer.hopto.org:3013/package/customerpackage
+name: Delete Customer's Single Package
+description: ""
+method: DELETE
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	
+    	
+    	"package_id": 1
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_bc12762e221148739693db9ce6e875d3
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMCwidHlwZSI6MCwiaWF0IjoxNjUxNTI4NDQwLCJleHAiOjE2NTE1Mjg3NDB9.ARPDO9v6PDeX-vkxaMkTx1M5mI7262oMYgDK2K8Iee0
+metaSortKey: -1651203166516.0312
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

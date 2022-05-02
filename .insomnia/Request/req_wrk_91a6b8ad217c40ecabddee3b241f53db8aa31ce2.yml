@@ -1,26 +1,26 @@
-_id: req_ee543707aab947559257eeb992ca2463
+_id: req_wrk_91a6b8ad217c40ecabddee3b241f53db8aa31ce2
 type: Request
-parentId: fld_bcf7a0e7ea584af4bf040dc57529de16
-modified: 1651532379369
-created: 1651413502279
-url: http://wheelancer.hopto.org:3013/user/login
-name: Login
+parentId: wrk_91a6b8ad217c40ecabddee3b241f53db
+modified: 1651509038930
+created: 1651508933128
+url: "{{ base_url }}/user/setemail"
+name: /user/setemail
 description: ""
-method: POST
+method: PUT
 body:
   mimeType: application/json
   text: |-
     {
-      "email": "berk4652@gmail.com",
-      "password": "testtset"
+      "uid": 1,
+      "email": "new@mail.com"
     }
 parameters: []
 headers:
   - name: Content-Type
     value: application/json
-    id: pair_f011d119cd694a10a242be74e6031ac0
+    id: pair_44f6ad4b437c479da49fd77dcae9f974
 authentication: {}
-metaSortKey: -1651413502279
+metaSortKey: -1651508933128
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true

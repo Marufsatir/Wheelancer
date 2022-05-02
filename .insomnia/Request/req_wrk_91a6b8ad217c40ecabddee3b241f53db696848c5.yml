@@ -1,0 +1,25 @@
+_id: req_wrk_91a6b8ad217c40ecabddee3b241f53db696848c5
+type: Request
+parentId: wrk_91a6b8ad217c40ecabddee3b241f53db
+modified: 1651509038600
+created: 1651508933135
+url: "{{ base_url }}/system/truncatetables"
+name: /system/truncatetables
+description: ""
+method: DELETE
+body: {}
+parameters: []
+headers:
+  - name: super_auth
+    disabled: false
+    value: "{{ superAuth }}"
+    id: pair_21bed02b31fb4829a3bdb016e4abdd8c
+authentication: {}
+metaSortKey: -1651508933135
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

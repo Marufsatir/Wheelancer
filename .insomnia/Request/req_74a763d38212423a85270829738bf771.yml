@@ -1,0 +1,41 @@
+_id: req_74a763d38212423a85270829738bf771
+type: Request
+parentId: fld_bcf7a0e7ea584af4bf040dc57529de16
+modified: 1651532692222
+created: 1651518737901
+url: http://wheelancer.hopto.org:3013/package/addcustomerpackage
+name: Add A Package to Customer
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"length": 12.5,
+    	"width": 14.2,
+    	"height": 5.1,
+    	"weight": 12.4,
+    	"type": "Flammable,Oxidizing",
+    	"s_long": -99.79118,
+    	"s_lat": 17.08936,
+    	"d_long": -91.79118,
+    	"d_lat": 19.08936,
+    	"receiver_email": "berk4652@gmail.com",
+    	"city": "Angara"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_e240749a85564dea832aa0eb6b087188
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMCwidHlwZSI6MCwiaWF0IjoxNjUxNTMyMzc4LCJleHAiOjE2NTE1MzI2Nzh9.3THbi3p9B2RQcFjYcq87zA57QzL595CBoGdGoXE2fPI
+metaSortKey: -1651195913558.6875
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

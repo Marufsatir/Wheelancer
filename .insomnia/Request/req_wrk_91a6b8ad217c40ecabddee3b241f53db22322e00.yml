@@ -1,0 +1,24 @@
+_id: req_wrk_91a6b8ad217c40ecabddee3b241f53db22322e00
+type: Request
+parentId: wrk_91a6b8ad217c40ecabddee3b241f53db
+modified: 1651508933134
+created: 1651508933134
+url: "{{ base_url }}/system/inserttables"
+name: /system/inserttables
+description: ""
+method: POST
+body: {}
+parameters: []
+headers:
+  - name: super_auth
+    disabled: false
+    value: "{{ superAuth }}"
+authentication: {}
+metaSortKey: -1651508933134
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

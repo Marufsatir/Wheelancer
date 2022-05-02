@@ -1,26 +1,25 @@
-_id: req_ee543707aab947559257eeb992ca2463
+_id: req_wrk_91a6b8ad217c40ecabddee3b241f53db5108484f
 type: Request
-parentId: fld_bcf7a0e7ea584af4bf040dc57529de16
-modified: 1651532379369
-created: 1651413502279
-url: http://wheelancer.hopto.org:3013/user/login
-name: Login
+parentId: wrk_91a6b8ad217c40ecabddee3b241f53db
+modified: 1651508933114
+created: 1651508933114
+url: "{{ base_url }}/user/verifycourier"
+name: /user/verifycourier
 description: ""
-method: POST
+method: PUT
 body:
   mimeType: application/json
   text: |-
     {
-      "email": "berk4652@gmail.com",
-      "password": "testtset"
+      "uid": 15,
+      "courier_id": 3
     }
 parameters: []
 headers:
   - name: Content-Type
     value: application/json
-    id: pair_f011d119cd694a10a242be74e6031ac0
 authentication: {}
-metaSortKey: -1651413502279
+metaSortKey: -1651508933114
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true
