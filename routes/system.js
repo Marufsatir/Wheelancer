@@ -7,7 +7,7 @@ const router = express.Router();
 
 
 
-
+//Disabled
 router.post("/inserttuples", async(req, res) => {
 
     try {
@@ -27,7 +27,7 @@ router.post("/inserttuples", async(req, res) => {
     }
 })
 
-
+//Disabled
 router.delete("/truncatetables", async(req, res) => {
 
     try {
@@ -47,6 +47,7 @@ router.delete("/truncatetables", async(req, res) => {
     }
 })
 
+//Disabled
 router.post("/inserttables", async(req, res) => {
 
     try {
@@ -66,7 +67,7 @@ router.post("/inserttables", async(req, res) => {
     }
 })
 
-
+//Disabled
 router.get("/test", async(req, res) => {
 
     try {

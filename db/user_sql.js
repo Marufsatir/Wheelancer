@@ -3,6 +3,9 @@ const pool = require("../db_config");
 
 let user = {};
 
+
+
+
 user.addUser = (name, surname, birthday, idNum, email, password) => {
     return new Promise((resolve, reject) => {
 
@@ -54,6 +57,19 @@ user.addCustomer = (user_id) => {
 }
 
 
+user.addVehicle = (userID, model, brand, max_length, max_width, max_height, max_weight, horsepower, registration_plate) => {
+    return new Promise((resolve, reject) => {
+
+        pool.query("INSERT INTO Vehicle(user_id,model,brand,max_length,max_width,max_height,max_weight,horsepower,registration_plate) VALUES(?,?,?,?,?,?,?,?,?)", [userID, model, brand, max_length, max_width, max_height, max_weight, horsepower, registration_plate], (err, results) => {
+
+            if (err && err.code != "ER_DUP_ENTRY") {
+
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
 
 user.setTryTimer = (user_id, mode) => {
 
@@ -311,23 +327,6 @@ user.checkAuth = (authCode) => {
                 return reject(err);
             }
             console.log("Auth Found=>" + results.length);
-            return resolve(results);
-
-        })
-    })
-}
-
-
-user.checkAuthType = (authCode, user_id) => {
-    return new Promise((resolve, reject) => {
-
-
-        pool.query("SELECT * FROM auth WHERE token = ? and user_id = ?", [authCode, user_id], (err, results) => {
-            if (err) {
-
-                return reject(err);
-            }
-            console.log("Auth with uid Found=>" + results.length);
             return resolve(results);
 
         })

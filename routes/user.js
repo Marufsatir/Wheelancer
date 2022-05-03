@@ -39,6 +39,45 @@ router.post("/checktoken", decodeAWT, async(req, res) => {
 })
 
 
+
+router.post("/addvehicle", decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+        let user_id = req.decoded.user_id
+        let model = req.body.model
+        let brand = req.body.brand
+        let max_length = req.body.max_length
+        let max_width = req.body.max_width
+        let max_height = req.body.max_height
+        let max_weight = req.body.max_weight
+        let horsepower = req.body.horsepower
+        let registration_plate = req.body.registration_plate
+
+        let resultAddVehicle = await sql.addVehicle(user_id, model, brand, max_length, max_width, max_height, max_weight, horsepower, registration_plate);
+
+        if (resultAddVehicle && resultAddVehicle.affectedRows) {
+
+            res.status(407).json({
+                result: 'Vehicle successfully added.'
+            })
+
+
+        } else { // User entered mail or username that has a user.
+            res.status(407).json({
+                error: 'Vehicle could not added.'
+            })
+        }
+
+
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+
+})
+
 router.post("/register", async(req, res) => {
 
     try {
