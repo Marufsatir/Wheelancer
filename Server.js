@@ -4,26 +4,41 @@ const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const YAML = require('yamljs');
 const app = express();
+const cors = require("cors");
+const randomCoordinates = require('random-coordinates');
+const morgan = require('morgan')
+require('dotenv').config()
+
+
 const systemRoute = require("./routes/system");
 const userRoute = require("./routes/user");
 const packageRoute = require("./routes/package")
 const transportRoute = require("./routes/transport");
-require('dotenv').config()
 
 const swaggerDocument = YAML.load('./swagger.yaml');
-const cors = require("cors");
-const req = require('express/lib/request');
 
 
-const PORT = 3013;
+app.use(morgan(":date[clf] :remote-addr :method [:status] :url - :response-time ms"))
+
 app.use(bodyParser.json());
 app.use(cors());
+
+
 
 app.use("/system", systemRoute);
 app.use("/user", userRoute);
 app.use("/package", packageRoute);
 app.use("/transport", transportRoute);
 
+
+app.use("/test", async(req, res) => {
+
+
+    res.status(200).json({
+        result: randomCoordinates()
+    })
+
+})
 
 
 
@@ -49,4 +64,4 @@ app.use(
     swaggerUi.setup(swaggerDocument, { explorer: true })
 );
 
-app.listen(PORT, () => console.log(`API is running on http://localhost:${PORT}`));
+app.listen(process.env.PORT, () => console.log(`API is running on http://localhost:${process.env.PORT}`));

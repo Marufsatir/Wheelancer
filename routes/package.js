@@ -80,10 +80,11 @@ router.post("/addcustomerpackage", decodeAWT, async(req, res) => {
         let d_long = req.body.d_long
         let d_lat = req.body.d_lat
         let receiver_email = req.body.receiver_email
-        let city = req.body.city
+        let s_city = req.body.s_city
+        let d_city = req.body.d_city
 
 
-        let resultAddPackage = await package_sql.addPackageToCustomer(user_id, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiver_email, city);
+        let resultAddPackage = await package_sql.addPackageToCustomer(user_id, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiver_email, s_city, d_city);
 
 
         if (resultAddPackage && resultAddPackage.affectedRows) {

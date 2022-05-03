@@ -54,6 +54,29 @@ user.addCustomer = (user_id) => {
 }
 
 
+
+user.setTryTimer = (user_id, mode) => {
+
+    let query;
+
+
+    if (mode == 'INCR') {
+        query = "UPDATE User SET verify_try = verify_try + 1 WHERE user_id = ?"
+    } else {
+        query = "UPDATE User SET verify_try = 0 WHERE user_id = ?"
+    }
+
+    return new Promise((resolve, reject) => {
+
+        pool.query(query, [user_id], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
 user.verifyCourier = (user_id, courier_id) => {
     return new Promise((resolve, reject) => {
 

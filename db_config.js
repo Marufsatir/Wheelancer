@@ -11,7 +11,6 @@ var poolLocal = mysql.createPool({
     charset: 'utf8mb4'
 });
 
-
 /*Use one of them to switch. 
 poolStar => Berk's Server
 poolRemote => Remote Server

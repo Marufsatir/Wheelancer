@@ -5,6 +5,7 @@ const transport_sql = require("../db/transport_sql");
 const router = express.Router();
 
 
+//Disabled
 router.get("/alltransports", async(req, res) => {
 
     try {
@@ -38,7 +39,7 @@ router.get("/alltransports", async(req, res) => {
     }
 })
 
-
+//Disabled
 router.get("/mytransports", async(req, res) => {
 
     try {

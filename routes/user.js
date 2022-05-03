@@ -82,7 +82,7 @@ router.post("/register", async(req, res) => {
                 user_id: user_id,
                 type: type
             }, PRIVATE_KEY, {
-                expiresIn: '5m'
+                expiresIn: process.env.AUTH_EXP_TIME
             })
 
             if (type == 0)
@@ -125,7 +125,7 @@ router.post("/sendverification", decodeAWT, async(req, res) => {
 
         let expireDate = new Date()
 
-        expireDate.setMinutes(expireDate.getMinutes() + 5)
+        expireDate.setMinutes(expireDate.getMinutes() + parseInt(process.env.MAIL_EXP_TIME))
 
 
         let user_id = req.decoded.user_id
@@ -134,8 +134,8 @@ router.post("/sendverification", decodeAWT, async(req, res) => {
         let resultListVerCodes = await sql.listVerificationCodes(user_id);
 
         if (resultListVerCodes && resultListVerCodes.length > 4) {
-            res.status(400).json({
-                error: 'User requested verification code more than 5 times.'
+            res.status(429).json({
+                error: 'User requested verification code more than 5 times. Please try again in 10 minutes.'
             })
             return;
         }
@@ -231,6 +231,11 @@ router.post("/sendverification", decodeAWT, async(req, res) => {
                     
                     </html>`, // html body
             });
+
+
+            await sql.setTryTimer(user_id, 'RESET');
+
+
         } catch (error) {
 
             console.log(error);
@@ -271,6 +276,14 @@ router.post("/checkverification", decodeAWT, async(req, res) => {
             })
         }
 
+        if (resultUser.verify_try < 5) {
+            await sql.setTryTimer(user_id, 'INCR');
+        } else {
+            return res.status(429).json({
+                error: 'Has made too many wrong entry please request a new code.'
+            })
+        }
+
         let resultListVerCodes = await sql.listVerificationCodes(user_id);
 
         if (resultListVerCodes && !resultListVerCodes.length) {
@@ -287,6 +300,7 @@ router.post("/checkverification", decodeAWT, async(req, res) => {
 
             await sql.verifyEmail(user_id);
 
+            await sql.setTryTimer(user_id, 'RESET');
 
             res.status(200).json({
                 result: 'Successfully verified.'
@@ -312,70 +326,9 @@ router.post("/checkverification", decodeAWT, async(req, res) => {
 })
 
 
-// router.post("/addfriend", async (req, res) => {
-
-//     try {
-//         res.type('json')
-//         let user_id = req.body.uid
-//         let friend_id = req.body.fid
-
-//         let auth = req.headers.authorization
-
-//         let resultCheckAuth = await sql.checkAuthType(auth, user_id)
-
-//         if (resultCheckAuth.length) {
-//             let resultAddFriend = await sql.addFriend(user_id, friend_id);
-//             if (resultAddFriend && resultAddFriend.affectedRows) {
-//                 res.sendStatus(200);
-//             }
-//             else { // If there are duplicates
-//                 res.sendStatus(401);
-//             }
-//         }
-//         else { // If three are none uid of fid
-//             res.sendStatus(401);
-//         }
 
 
-//     } catch (error) {
-//         res.sendStatus(500);
-//         console.log(error)
-//     }
-
-// })
-
-// router.delete("/removefriend", async (req, res) => {
-
-//     try {
-//         res.type('json')
-//         let user_id = req.body.uid
-//         let friend_id = req.body.fid
-
-//         let auth = req.headers.authorization
-
-//         let resultCheckAuth = await sql.checkAuthType(auth, user_id)
-
-//         if (resultCheckAuth.length) {
-//             let resultAddFriend = await sql.delFriend(user_id, friend_id);
-//             if (resultAddFriend && resultAddFriend.affectedRows) {
-//                 res.sendStatus(200);
-//             }
-//             else { // If there are duplicates
-//                 res.sendStatus(401);
-//             }
-//         }
-//         else { // If three are none uid of fid
-//             res.sendStatus(401);
-//         }
-
-
-//     } catch (error) {
-//         res.sendStatus(500);
-//         console.log(error)
-//     }
-
-// })
-
+//Disabled
 router.put("/setbio", async(req, res) => {
 
     try {
@@ -406,116 +359,116 @@ router.put("/setbio", async(req, res) => {
 
 })
 
-
+//Disabled
 router.put("/setemail", async(req, res) => {
 
-    try {
-        res.type('json')
-        let user_id = req.body.uid
-        let email = req.body.email
+        try {
+            res.type('json')
+            let user_id = req.body.uid
+            let email = req.body.email
 
-        let auth = req.headers.authorization
+            let auth = req.headers.authorization
 
-        let resultCheckAuth = await sql.checkAuthType(auth, user_id)
+            let resultCheckAuth = await sql.checkAuthType(auth, user_id)
 
-        if (resultCheckAuth.length) {
-            let resultSetEmail = await sql.setEmail(user_id, email);
-            if (resultSetEmail && resultSetEmail.affectedRows) {
-                res.sendStatus(200);
-            } else {
+            if (resultCheckAuth.length) {
+                let resultSetEmail = await sql.setEmail(user_id, email);
+                if (resultSetEmail && resultSetEmail.affectedRows) {
+                    res.sendStatus(200);
+                } else {
+                    res.sendStatus(401);
+                }
+            } else { // If three are none uid of fid
                 res.sendStatus(401);
             }
-        } else { // If three are none uid of fid
-            res.sendStatus(401);
+        } catch (error) {
+            res.sendStatus(500);
+            console.log(error)
         }
-    } catch (error) {
-        res.sendStatus(500);
-        console.log(error)
-    }
-})
-
+    })
+    //Disabled
 router.put("/setname", async(req, res) => {
 
-    try {
-        res.type('json')
-        let user_id = req.body.uid
-        let name = req.body.name
+        try {
+            res.type('json')
+            let user_id = req.body.uid
+            let name = req.body.name
 
-        let auth = req.headers.authorization
+            let auth = req.headers.authorization
 
-        let resultCheckAuth = await sql.checkAuthType(auth, user_id)
+            let resultCheckAuth = await sql.checkAuthType(auth, user_id)
 
-        if (resultCheckAuth.length) {
-            let resultSetName = await sql.setName(user_id, name);
-            if (resultSetName && resultSetName.affectedRows) {
-                res.sendStatus(200);
-            } else {
+            if (resultCheckAuth.length) {
+                let resultSetName = await sql.setName(user_id, name);
+                if (resultSetName && resultSetName.affectedRows) {
+                    res.sendStatus(200);
+                } else {
+                    res.sendStatus(401);
+                }
+            } else { // If three are none uid of fid
                 res.sendStatus(401);
             }
-        } else { // If three are none uid of fid
-            res.sendStatus(401);
+        } catch (error) {
+            res.sendStatus(500);
+            console.log(error)
         }
-    } catch (error) {
-        res.sendStatus(500);
-        console.log(error)
-    }
-})
-
+    })
+    //Disabled
 router.put("/addbalance", async(req, res) => {
 
-    try {
-        res.type('json')
-        let user_id = req.body.uid
-        let amount = req.body.amount
+        try {
+            res.type('json')
+            let user_id = req.body.uid
+            let amount = req.body.amount
 
-        let auth = req.headers.authorization
+            let auth = req.headers.authorization
 
-        let resultCheckAuth = await sql.checkAuthType(auth, user_id)
-        let resultGetUserInfo = await sql.getUserInfo(user_id);
+            let resultCheckAuth = await sql.checkAuthType(auth, user_id)
+            let resultGetUserInfo = await sql.getUserInfo(user_id);
 
-        if (resultCheckAuth.length) {
-            let resultWithdraw = await sql.deposit(user_id, amount + resultGetUserInfo[0].balance);
-            if (resultWithdraw && resultWithdraw.affectedRows) {
-                res.sendStatus(200);
-            } else {
+            if (resultCheckAuth.length) {
+                let resultWithdraw = await sql.deposit(user_id, amount + resultGetUserInfo[0].balance);
+                if (resultWithdraw && resultWithdraw.affectedRows) {
+                    res.sendStatus(200);
+                } else {
+                    res.sendStatus(401);
+                }
+            } else { // If three are none uid of fid
                 res.sendStatus(401);
             }
-        } else { // If three are none uid of fid
-            res.sendStatus(401);
+        } catch (error) {
+            res.sendStatus(500);
+            console.log(error)
         }
-    } catch (error) {
-        res.sendStatus(500);
-        console.log(error)
-    }
-})
-
+    })
+    //Disabled
 router.put("/setpassword", async(req, res) => {
 
-    try {
-        res.type('json')
-        let user_id = req.body.uid
-        let password = req.body.password
+        try {
+            res.type('json')
+            let user_id = req.body.uid
+            let password = req.body.password
 
-        let auth = req.headers.authorization
+            let auth = req.headers.authorization
 
-        let resultCheckAuth = await sql.checkAuthType(auth, user_id)
+            let resultCheckAuth = await sql.checkAuthType(auth, user_id)
 
-        if (resultCheckAuth.length) {
-            let resultSetPassword = await sql.setPassword(user_id, password);
-            if (resultSetPassword && resultSetPassword.affectedRows) {
-                res.sendStatus(200);
-            } else {
+            if (resultCheckAuth.length) {
+                let resultSetPassword = await sql.setPassword(user_id, password);
+                if (resultSetPassword && resultSetPassword.affectedRows) {
+                    res.sendStatus(200);
+                } else {
+                    res.sendStatus(401);
+                }
+            } else { // If three are none uid of fid
                 res.sendStatus(401);
             }
-        } else { // If three are none uid of fid
-            res.sendStatus(401);
+        } catch (error) {
+            res.sendStatus(500);
+            console.log(error)
         }
-    } catch (error) {
-        res.sendStatus(500);
-        console.log(error)
-    }
-})
-
+    })
+    //Disabled
 router.put("/setusername", async(req, res) => {
 
     try {
@@ -543,161 +496,7 @@ router.put("/setusername", async(req, res) => {
     }
 })
 
-// router.get("/getusers", async (req, res) => {
 
-//     try {
-//         res.type('json')
-//         let user_id = req.query.uid
-
-//         let auth = req.headers.authorization
-
-//         let resultCheckAuth = await sql.checkAuth(auth)
-
-
-//         if (resultCheckAuth.length) {
-//             let resultgetUsers = await sql.getNonFriends(user_id);
-//             res.status(200);
-//             res.json(resultgetUsers);
-//         }
-//         else {
-//             res.sendStatus(401);
-//         }
-
-//     } catch (error) {
-//         res.sendStatus(500);
-//         console.log(error)
-//     }
-
-// })
-
-// router.get("/getfriends", async (req, res) => {
-
-//     try {
-//         res.type('json')
-//         let user_id = req.query.uid
-
-//         let auth = req.headers.authorization
-
-//         let resultCheckAuth = await sql.checkAuthType(auth, user_id)
-
-
-//         if (resultCheckAuth.length) {
-//             let resultGetFriends = await sql.getFriends(user_id);
-//             res.status(200);
-//             res.json(resultGetFriends);
-//         }
-//         else {
-//             res.sendStatus(401);
-//         }
-
-//     } catch (error) {
-//         res.sendStatus(500);
-//         console.log(error)
-//     }
-
-// })
-
-// router.get("/incomingrequests", async (req, res) => {
-
-//     try {
-//         res.type('json')
-//         let user_id = req.query.uid
-//         let auth = req.headers.authorization
-
-//         let resultCheckAuth = await sql.checkAuthType(auth, user_id)
-
-
-//         if (resultCheckAuth.length) {
-//             let resultIncomingRequests = await sql.getIncomingRequests(user_id);
-//             res.status(200);
-
-//             resultIncomingRequests.forEach(item => {
-//                 item.accepted = 0;
-//             });
-
-//             console.log(resultIncomingRequests)
-//             res.json(resultIncomingRequests);
-//         }
-//         else {
-//             res.sendStatus(401);
-//         }
-
-//     } catch (error) {
-//         res.sendStatus(500);
-//         console.log(error)
-//     }
-
-// })
-
-// router.get("/outgoingrequests", async (req, res) => {
-
-//     try {
-//         res.type('json')
-//         let user_id = req.query.uid
-//         let auth = req.headers.authorization
-
-//         let resultCheckAuth = await sql.checkAuthType(auth, user_id)
-
-
-//         if (resultCheckAuth.length) {
-//             let resultIncomingRequests = await sql.getOutgoingRequests(user_id);
-//             res.status(200);
-
-//             resultIncomingRequests.forEach(item => {
-//                 item.accepted = 0;
-//             });
-
-//             console.log(resultIncomingRequests)
-//             res.json(resultIncomingRequests);
-//         }
-//         else {
-//             res.sendStatus(401);
-//         }
-
-//     } catch (error) {
-//         res.sendStatus(500);
-//         console.log(error)
-//     }
-// })
-
-
-// router.put("/requestresponse", async (req, res) => {
-
-//     try {
-//         res.type('json')
-//         let user_id = req.body.uid
-//         let friend_id = req.body.sender_id
-//         let response = req.body.response
-
-//         let auth = req.headers.authorization
-
-//         let resultCheckAuth = await sql.checkAuthType(auth, user_id)
-
-//         if (resultCheckAuth.length) {
-//             let resultSetRequest;
-//             if (response) {
-
-//                 resultSetRequest = await sql.acceptRequest(user_id, friend_id);
-//             }
-//             else{
-//                 resultSetRequest = await sql.delFriend(user_id, friend_id);
-//             }
-
-//             if (resultSetRequest && resultSetRequest.affectedRows) {
-//                 res.sendStatus(200);
-//             }
-//             else {
-//                 res.sendStatus(401);
-//             }
-//         }
-//         else { // If three are none uid of fid
-//             res.sendStatus(401);
-//         }
-//     } catch (error) {
-//         res.sendStatus(500);
-//         console.log(error)
-//     }
-// })
 
 
 
@@ -726,7 +525,7 @@ router.post("/login", async(req, res) => {
                 user_id: user_id,
                 type: type
             }, PRIVATE_KEY, {
-                expiresIn: '5m'
+                expiresIn: process.env.AUTH_EXP_TIME
             })
 
             res.status(200).json({
@@ -779,7 +578,7 @@ router.get("/getuser", async(req, res) => {
 })
 
 
-
+//Disabled
 router.get("/getunverifiedcouriers", async(req, res) => {
 
     try {
@@ -803,7 +602,7 @@ router.get("/getunverifiedcouriers", async(req, res) => {
     }
 })
 
-
+//Disabled
 router.get("/getverifiedcouriers", async(req, res) => {
 
     try {
@@ -827,6 +626,7 @@ router.get("/getverifiedcouriers", async(req, res) => {
     }
 })
 
+//Disabled
 router.put("/verifycourier", async(req, res) => {
 
     try {
