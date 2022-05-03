@@ -1,16 +1,15 @@
 _id: env_env_6dcd968eb747a26f9ab711319fefb0fee942842f_sub
 type: Environment
 parentId: env_6dcd968eb747a26f9ab711319fefb0fee942842f
-modified: 1651502930182
+modified: 1651533478675
 created: 1651502519622
 name: OpenAPI env
 data:
   scheme: http
   base_path: ""
   host: wheelancer.hopto.org:3013
-  superAuth: superAuth
-  bearerToken: bearerToken
   authorization: Bearer authorization
+  superAuth: superAuth
 dataPropertyOrder:
   "&":
     - scheme

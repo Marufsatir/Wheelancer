@@ -1,0 +1,23 @@
+_id: req_0db9bc15e8824747947ebd22a390c0e8
+type: Request
+parentId: fld_bcf7a0e7ea584af4bf040dc57529de16
+modified: 1651539310713
+created: 1651539302972
+url: http://wheelancer.hopto.org:3013/test
+name: Get Random Coordinate
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMCwidHlwZSI6MCwiaWF0IjoxNjUxNTMyMzc4LCJleHAiOjE2NTE1MzI2Nzh9.3THbi3p9B2RQcFjYcq87zA57QzL595CBoGdGoXE2fPI
+metaSortKey: -1651188660601.3438
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
