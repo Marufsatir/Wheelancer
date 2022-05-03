@@ -1,7 +1,7 @@
 _id: req_dc7fb016b4364645bc10dbabcdab0aee
 type: Request
 parentId: fld_bcf7a0e7ea584af4bf040dc57529de16
-modified: 1651509006884
+modified: 1651591421977
 created: 1651442302996
 url: http://wheelancer.hopto.org:3013/user/sendverification
 name: Send Verification
@@ -17,7 +17,7 @@ headers:
     id: pair_f011d119cd694a10a242be74e6031ac0
 authentication:
   type: bearer
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMCwidHlwZSI6MCwiaWF0IjoxNjUxNDQ1MzM1LCJleHAiOjE2NTE0NDU2MzV9.FVIV31yl6rppuoDuKb4BCW_L-ewvqeb67d-8P054sjY
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMCwidHlwZSI6MCwiaWF0IjoxNjUxNTkwMjIzLCJleHAiOjE2NTIxOTUwMjN9.G-JCHzCKiKD0PGcqTuTDVssyaP93_SUn1mkz3DID8q4
 metaSortKey: -1651413502329
 isPrivate: false
 settingStoreCookies: true
