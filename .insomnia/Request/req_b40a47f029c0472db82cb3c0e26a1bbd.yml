@@ -1,0 +1,27 @@
+_id: req_b40a47f029c0472db82cb3c0e26a1bbd
+type: Request
+parentId: fld_d1d43ffe7cdd45cf964697b100667542
+modified: 1651614320445
+created: 1651614026065
+url: http://wheelancer.hopto.org:3013/package/allpackageproofs
+name: Get All Package Proofs
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_7504b7e1d6784f2dafa43323a6ee7bf9
+    name: package_id
+    value: "10"
+    description: ""
+headers: []
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2OSwidHlwZSI6MCwiaWF0IjoxNjUxNjAyMjk2LCJleHAiOjE2NTIyMDcwOTZ9.cI65vKtUHf2bMj0UF03dNFwxPmWuf8jAWhwPxarUosg
+metaSortKey: -1651508958575.5
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
