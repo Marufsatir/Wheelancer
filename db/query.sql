@@ -42,3 +42,18 @@
 
 -- Assign new Vehicle to Courier
 "INSERT INTO Vehicle(user_id,model,brand,max_length,max_width,max_height,max_weight,horsepower,registration_plate) VALUES(?,?,?,?,?,?,?,?,?)", [userID,model,brand,max_length,max_width,max_height,max_weight,horsepower,registration_plate]
+
+-- List Vehicles of a User
+"SELECT * FROM Vehicle WHERE user_id = ?", [userID]
+
+-- Add Document
+"INSERT INTO Document(user_id,document,type) VALUES(?,?,?)" [userID,document,type]
+
+-- View a single proof
+"SELECT * FROM Package_Proofs WHERE proof_id = ?", [proofID]
+
+-- List proofs (?)
+"SELECT pp.proof_id, pp.type, pp.image, pp.date FROM Package_Proofs pp LEFT JOIN Package p ON (p.pid = pp.pid) LEFT JOIN Transportation t ON (p.transport_id = t.transport_id) WHERE p.pid = ? AND (p.cid = ? OR t.courier_id = ?)", [pid,cid,courierID]
+
+-- Add Proof
+"INSERT INTO Package_Proofs(pid,type,image) VALUES(?,?,?)", [pid,type,image]
