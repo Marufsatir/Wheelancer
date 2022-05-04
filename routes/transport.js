@@ -23,25 +23,7 @@ const s3 = new AWS.S3({
 const router = express.Router();
 
 
-/*
-Brings near packages to the courier.
-query:
--s_city
--curr_pos_long
--curr_pos_lat
--radius : In meters
-
-out (401):
-{
-    error: 'You do not have permission to perform this.'
-}
-
-out (200):
-{
-    result: <SQL(Package)>
-}
-
-*/
+// Brings near packages to the courier.
 router.get("/nearpackages", decodeAWT, async(req, res) => {
 
     try {

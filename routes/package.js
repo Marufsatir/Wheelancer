@@ -22,40 +22,7 @@ const s3 = new AWS.S3({
 
 
 
-/*Gets customer's own packages return all of them
-No body or query except header.
-
-Out 1 (200):
-{
-	"result": [
-		{
-			"pid": 9,
-			"cid": 69,
-			"transport_id": 5,
-			"length": 12.5,
-			"width": 14.2,
-			"height": 5.1,
-			"weight": 12.4,
-			"type": "Flammable,Oxidizing",
-			"s_long": -99.79118,
-			"s_lat": 17.08936,
-			"d_long": -91.79118,
-			"d_lat": 19.08936,
-			"status": "CREATED",
-			"receiver_email": "",
-			"estimated_delivery_date": null,
-			"chat_channel_id": null,
-			"s_city": "",
-			"d_city": ""
-		}
-	]
-}
-Out 2 (If there are none) (200):
-
-{
-	"result": []
-}
-*/
+// Gets customer's own packages return all of them
 router.get("/customerpackages", decodeAWT, async(req, res) => {
 
     try {
@@ -82,40 +49,7 @@ router.get("/customerpackages", decodeAWT, async(req, res) => {
     }
 })
 
-/*Gets customer's own package
-
-Query:
--package_id
-
-Out 1 (200):
-{
-	"result": {
-		"pid": 10,
-		"cid": 69,
-		"transport_id": 5,
-		"length": 12.5,
-		"width": 14.2,
-		"height": 5.1,
-		"weight": 12.4,
-		"type": "Flammable,Oxidizing",
-		"s_long": -99.79118,
-		"s_lat": 17.08936,
-		"d_long": -91.79118,
-		"d_lat": 19.08936,
-		"status": "CREATED",
-		"receiver_email": "",
-		"estimated_delivery_date": null,
-		"chat_channel_id": null,
-		"s_city": "",
-		"d_city": ""
-	}
-}
-
-Out 2 (404):
-    {
-        error: "Package could not found."
-    }
-*/
+// Gets customer's own package
 router.get("/customerpackage", decodeAWT, async(req, res) => {
 
     try {
@@ -193,35 +127,7 @@ router.post("/addpackageproof", decodeAWT, async(req, res) => {
 })
 
 
-/*Add customer's package to the system.
-Body:
-{
-	"length": 12.5,
-	"width": 14.2,
-	"height": 5.1,
-	"weight": 12.4,
-	"type": "Flammable,Oxidizing",
-	"s_long": -99.79118,
-	"s_lat": 17.08936,
-	"d_long": -91.79118,
-	"d_lat": 19.08936,
-	"receiver_email": "",
-	"s_city": "",
-	"d_city" : "",
-	"image_raw": "BASE64IMG"
-}
-
-Out1 (200):
-{
-	"result": "Package added successfully."
-}
-
-Out2 (403):
-{
-    error: 'Package could not be added.'
-}
-
-*/
+// Add customer's package to the system.
 router.post("/addcustomerpackage", upload.any(), decodeAWT, async(req, res) => {
 
     try {
@@ -272,36 +178,7 @@ router.post("/addcustomerpackage", upload.any(), decodeAWT, async(req, res) => {
     }
 })
 
-/* This works for both customer and courier.
-
-query:
-package_id
-
-
-Out1 (200):
-{
-	"result": [
-		{
-			"proof_id": 3,
-			"type": "dfgsdg",
-			"image": "sdfgdgf",
-			"date": "2022-05-03T21:34:33.000Z"
-		},
-		{
-			"proof_id": 4,
-			"type": "asdasd",
-			"image": "906fd724-ef4d-49a5-872f-f4c2294c8a01",
-			"date": "2022-05-03T21:34:33.000Z"
-		}
-	]
-}
-
-Out2 (200):
-{
-	"result": []
-}
-
-*/
+// This works for both customer and courier.
 router.get("/allpackageproofs", decodeAWT, async(req, res) => {
 
     try {
@@ -331,25 +208,7 @@ router.get("/allpackageproofs", decodeAWT, async(req, res) => {
     }
 })
 
-/*Get Package Proof Data
-query:
--image_uuid
-
-out1 (200):
-{
-    "result": "BASE64"
-}
-
-out 2 (404):
-{
-    error: 'Proof image could not found.'
-}
-
-out 3(405)
-{
-    error: 'Image file is missing in our system.'
-}
-*/
+// Get Package Proof Data
 router.get("/packageproof", decodeAWT, async(req, res) => {
 
     try {
@@ -400,7 +259,7 @@ router.get("/packageproof", decodeAWT, async(req, res) => {
 })
 
 
-/*Deletes customer's package to the system.
+/*Deletes customer's package from the system.
 body:
 {
 	"package_id": 1

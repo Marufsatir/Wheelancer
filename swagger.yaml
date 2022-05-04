@@ -100,12 +100,25 @@ paths:
 
 #---<<<<<<<<<<<<<<<<<<<<<<<<<<<USER>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+  /user/checktoken:
+    post:
+      tags:
+        - "User-General"
+
+      description: Only checks token for persistent login.
+              
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+
   /user/login:
     post:
       tags:
         - "User-General"
 
-      description: User Login
+      description: Performs login operation and give user JWT token.
       requestBody:
         required: true
         content:
@@ -113,12 +126,12 @@ paths:
             schema:
               type: object
               properties:
-                  username:
+                  email:
                     type: string
                   password:
                     type: string
               example:
-               username: Mahmut_03
+               email: Mahmut_03
                password: testtset
               
       responses:
@@ -131,12 +144,28 @@ paths:
                 properties:
                   user_id:
                     type: integer
-                  token:
+                  name:
+                    type: string
+                  surname:
+                    type: string
+                  birthday:
+                    type: string
+                  idnum:
+                    type: string
+                  balance:
+                    type: integer
+                  email:
+                    type: string
+                  password:
+                    type: string
+                  registration_date:
                     type: string
                   type:
                     type: integer
+                  token:
+                    type: string
         '401':
-          description: Unauthorized - Wrong username or email.
+          description: Wrong credentials.
 
   /user/register:
     post:        
@@ -151,26 +180,28 @@ paths:
             schema:
               type: object
               properties:
-               user_id:
-                  type: integer
-               username:
+                name:
                   type: string
-               name:
+                surname:
                   type: string
-               email:
+                birthday:
                   type: string
-               biography:
+                idnum:
                   type: string
-               password:
+                email:
                   type: string
-               type:
+                password:
+                  type: string
+                type:
                   type: integer
               example:
-               username: Mahmut_03
-               email: test@test.com
-               name: Mahmut
-               password: testtset
-               type: 1
+                name: John
+                surname: asdasd
+                birthday: "2022-05-01T20:41:21.457Z"
+                idnum: "123131323"
+                email: test@wheeasdasdasdlancer.com
+                password: testtset
+                type: 0
       responses:
         '200':
           description: OK - Successfully registered.
@@ -179,14 +210,74 @@ paths:
               schema:
                 type: object
                 properties:
-                  user_id:
-                    type: integer
-                  token:
+                  name:
+                    type: string
+                  surname:
+                    type: string
+                  birthday:
+                    type: string
+                  idnum:
+                    type: string
+                  email:
+                    type: string
+                  password:
                     type: string
                   type:
                     type: integer
+                  token:
+                    type: string
         '406':
           description: Not Acceptable - User with same username or email already exists.
+
+  /user/sendverification:
+    post:        
+      tags:
+        - "User-General"
+
+      description: Send mail verificaiton for users.
+      
+      responses:
+        '200':
+          description: Mail sent, please check your mailbox.
+        '409':
+          description: User is already verified.
+        '429':
+          description: User requested verification code more than 5 times. Please try again in 10 minutes.
+        '500':
+          description: Could not send verification code.
+          
+  /user/checkverification:
+    post:        
+      tags:
+        - "User-General"
+
+      description: Checks requested verification code to verify user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                code:
+                  type: string
+                  example: "6208"
+          
+      responses:
+        '200':
+          description: Successfully verified.
+        '401':
+          description: Please send a verification code.
+        '403':
+          description: Wrong verification code.
+        '408':
+          description: Verification code expired.
+        '409':
+          description: User is already verified.
+        '429':
+          description: Has made too many wrong entry please request a new code.
+        '500':
+          description: Interval Server Error
 
   /user/setbio:
     put:
@@ -363,6 +454,8 @@ paths:
         '401':
           description: Unauthorized - Wrong username or email.
 
+#---<<<<<<<<<<<<<<<<<<<<<<<<<<<ADMIN>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
   /user/getunverifiedcouriers:
     get:
       security:
@@ -466,8 +559,154 @@ paths:
         '401':
           description: Unauthorized - Wrong username or email.
 
+#---<<<<<<<<<<<<<<<<<<<<<<<<<<<COURIER>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-#---<<<<<<<<<<<<<<<<<<<<<<<<<<<Transport>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  /user/addvehicle:
+    post:
+      security:
+        - bearerAuth: []
+        
+      tags:
+        - "User-Courier"
+
+      description: Add vehicle to courier.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                model:
+                  type: string
+                brand:
+                  type: string
+                max_length:
+                  type: number
+                max_width:
+                  type: number
+                max_height:
+                  type: number
+                max_weight:
+                  type: number
+                horsepower:
+                  type: integer
+                registration_plate:
+                  type: string
+                type:
+                  type: string
+              example:
+                model: Golf,
+                brand: Volkswagen
+                max_length: 120.000
+                max_width: 90.000
+                max_height: 80.000
+                max_weight: 40.000
+                horsepower: 120
+                registration_plate: 06MS8967
+                type: Sedan
+                
+      responses:
+        '200':
+          description: OK - Vehicle successfully added.
+        '401':
+          description: Unauthorized - User must be courier.
+        '500':
+          description: Internal Server Error
+          
+          
+  /user/myvehicles:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - "User-Courier"
+
+      description: Returns courier's vehicles
+      responses:
+        '200':
+          description: OK - Listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                    properties:
+                      vehicle_id:
+                        type: integer
+                      user_id:
+                        type: integer
+                      model:
+                        type: string
+                      brand:
+                        type: string
+                      max_length:
+                        type: number
+                      max_width:
+                        type: number
+                      max_height:
+                        type: number
+                      max_weight:
+                        type: number
+                      horsepower:
+                        type: integer
+                      registration_plate:
+                        type: string
+                      
+        '500':
+          description: Interval Server Error
+          
+  /user/adddocument:
+    post:
+      security:
+        - bearerAuth: []
+        
+      tags:
+        - "User-Courier"
+
+      description: Adds document to the courier to be verified.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                document:
+                  type: string
+                  format: binary
+              
+      responses:
+        '200':
+          description: OK - Document added successfully.
+        '402':
+          description: Document could not be added.
+        '500':
+          description: Internal Server Error
+          
+  /user/mydocument:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - "User-Courier"
+
+      description: Gets document data for courier.
+      responses:
+        '200':
+          description: OK
+          content:
+            image/png:
+              schema: 
+                type: string
+                format: binary
+        '404':
+          description: Document could not be found.
+        '405':
+          description: Document file is missing in our system.
+        '500':
+          description: Internal Server Error
+
+#---<<<<<<<<<<<<<<<<<<<<<<<<<<<TRANSPORT>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   /transport/alltransports:
     get:
@@ -485,26 +724,112 @@ paths:
               schema:
                 type: array
                 items:
-                    properties:
-                      tid:
-                        type: string
-                      customer_id:
-                        type: integer
-                      courier_id:
-                        type: integer
-                      cargo_size:
-                        type: integer
-                      cargo_weight:
-                        type: integer
-                      creation_date:
-                        type: string
-                      departure_cords:
-                        type: string
-                      arrival_cords:
-                        type: string
+                  properties:
+                    tid:
+                      type: string
+                    customer_id:
+                      type: integer
+                    courier_id:
+                      type: integer
+                    cargo_size:
+                      type: integer
+                    cargo_weight:
+                      type: integer
+                    creation_date:
+                      type: string
+                    departure_cords:
+                      type: string
+                    arrival_cords:
+                      type: string
                       
         '401':
           description: Unauthorized - Token is expired or wrong.
+          
+  /transport/nearpackages:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - "Transport"
+
+      description: Brings near packages to the courier.
+      parameters:
+        - in: query
+          name: s_city
+          schema:
+            type: string
+          description: Departure City
+          example: Ankara
+        - in: query
+          name: curr_pos_long
+          schema:
+            type: number
+          description: Longitude of the current courier position
+          example: 126.574000
+        - in: query
+          name: curr_pos_lat
+          schema:
+            type: number
+          description: Latitude of the current courier position
+          example: 354.153500
+        - in: query
+          name: radius
+          schema:
+            type: number
+          description: (In Meters)
+          example: 5
+      responses:
+        '200':
+          description: OK - Listed
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    pid:
+                      type: integer
+                    cid:
+                      type: integer
+                    transport_id:
+                      type: integer
+                    length:
+                      type: number
+                    width:
+                      type: number
+                    height:
+                      type: number
+                    weight:
+                      type: number
+                    type:
+                      type: string
+                    s_long:
+                      type: number
+                    s_lat:
+                      type: number
+                    d_long:
+                      type: number
+                    d_lat:
+                      type: number
+                    status:
+                      type: string
+                    receiver_fullname:
+                      type: string
+                    receiver_email:
+                      type: string
+                    estimated_delivery_date:
+                      type: string
+                    chat_channel_id:
+                      type: string
+                    s_city:
+                      type: string
+                    d_city:
+                      type: string
+                      
+        '401':
+          description: You do not have permission to perform this.
+
+#---<<<<<<<<<<<<<<<<<<<<<<<<<<<CUSTOMER>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
   /transport/mytransports:
     get:
@@ -528,23 +853,23 @@ paths:
               schema:
                 type: array
                 items:
-                    properties:
-                      tid:
-                        type: string
-                      customer_id:
-                        type: integer
-                      courier_id:
-                        type: integer
-                      cargo_size:
-                        type: integer
-                      cargo_weight:
-                        type: integer
-                      creation_date:
-                        type: string
-                      departure_cords:
-                        type: string
-                      arrival_cords:
-                        type: string
+                  properties:
+                    tid:
+                      type: string
+                    customer_id:
+                      type: integer
+                    courier_id:
+                      type: integer
+                    cargo_size:
+                      type: integer
+                    cargo_weight:
+                      type: integer
+                    creation_date:
+                      type: string
+                    departure_cords:
+                      type: string
+                    arrival_cords:
+                      type: string
                       
         '401':
           description: Unauthorized - Token is expired or wrong.
@@ -566,44 +891,45 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  pid:
-                    type: integer
-                  cid:
-                    type: integer
-                  transport_id:
-                    type: integer
-                  length:
-                    type: number
-                  width:
-                    type: number
-                  height:
-                    type: number
-                  weight:
-                    type: number
-                  type:
-                    type: string
-                  s_long:
-                    type: number
-                  s_lat:
-                    type: number
-                  d_long:
-                    type: number
-                  d_lat:
-                    type: number
-                  status:
-                    type: string
-                  receiver_email:
-                    type: string
-                  estimated_delivery_date:
-                    type: string
-                  chat_channel_id:
-                    type: string
-                  s_city:
-                    type: string
-                  d_city:
-                    type: string
+                type: array
+                items:
+                  properties:
+                    pid:
+                      type: integer
+                    cid:
+                      type: integer
+                    transport_id:
+                      type: integer
+                    length:
+                      type: number
+                    width:
+                      type: number
+                    height:
+                      type: number
+                    weight:
+                      type: number
+                    type:
+                      type: string
+                    s_long:
+                      type: number
+                    s_lat:
+                      type: number
+                    d_long:
+                      type: number
+                    d_lat:
+                      type: number
+                    status:
+                      type: string
+                    receiver_email:
+                      type: string
+                    estimated_delivery_date:
+                      type: string
+                    chat_channel_id:
+                      type: string
+                    s_city:
+                      type: string
+                    d_city:
+                      type: string
         '406':
           description: Not Acceptable - User with same username or email already exists.
         '500':
@@ -784,16 +1110,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  proof_id:
-                    type: integer
-                  type:
-                    type: integer
-                  image:
-                    type: integer
-                  date:
-                    type: number
+                type: array
+                items:
+                  properties:
+                    proof_id:
+                      type: integer
+                    pid:
+                      type: integer
+                    type:
+                      type: string
+                    image:
+                      type: string
+                    date:
+                      type: string
         '500':
           description: Internal Server Error
           
@@ -820,9 +1149,10 @@ paths:
         '200':
           description: OK - Successfully registered.
           content:
-            text/plain:
-              schema:
+            image/png:
+              schema: 
                 type: string
+                format: binary
         '404':
           description: Proof image could not found.
         '405':
