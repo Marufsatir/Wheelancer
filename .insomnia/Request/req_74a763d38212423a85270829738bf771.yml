@@ -1,39 +1,24 @@
 _id: req_74a763d38212423a85270829738bf771
 type: Request
-parentId: fld_bcf7a0e7ea584af4bf040dc57529de16
-modified: 1651606724922
+parentId: fld_d42342d057de4d7597c174353de47331
+modified: 1651673185417
 created: 1651518737901
-url: http://wheelancer.hopto.org:3013/package/addcustomerpackage
-name: Add A Package to Customer
+url: http://wheelancer.hopto.org:3013/user/adddocument
+name: Add A Document to Courier
 description: ""
 method: POST
 body:
-  mimeType: application/json
-  text: |-
-    {
-    	"length": 12.5,
-    	"width": 14.2,
-    	"height": 5.1,
-    	"weight": 12.4,
-    	"type": "Flammable,Oxidizing",
-    	"s_long": -99.79118,
-    	"s_lat": 17.08936,
-    	"d_long": -91.79118,
-    	"d_lat": 19.08936,
-    	"receiver_email": "berk4652@gmail.com",
-    	"s_city": "Angara",
-    	"d_city" : "İstanbul",
-    	"image_raw": "AAAAAA"
-    }
+  mimeType: application/octet-stream
+  fileName: ""
 parameters: []
 headers:
   - name: Content-Type
-    value: application/json
+    value: application/octet-stream
     id: pair_e240749a85564dea832aa0eb6b087188
 authentication:
   type: bearer
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2OSwidHlwZSI6MCwiaWF0IjoxNjUxNjAyMjk2LCJleHAiOjE2NTIyMDcwOTZ9.cI65vKtUHf2bMj0UF03dNFwxPmWuf8jAWhwPxarUosg
-metaSortKey: -1651195913558.6875
+metaSortKey: -1651508997035
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true
