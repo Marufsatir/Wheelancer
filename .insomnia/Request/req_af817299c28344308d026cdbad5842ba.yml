@@ -1,0 +1,23 @@
+_id: req_af817299c28344308d026cdbad5842ba
+type: Request
+parentId: fld_d42342d057de4d7597c174353de47331
+modified: 1651707776041
+created: 1651707765293
+url: http://wheelancer.hopto.org:3013/user/getmyuser
+name: Get My User
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNjcyNDI5LCJleHAiOjE2NTIyNzcyMjl9.uYE6XdfQcrwuGjSVg16tKtLsXI-CEoCGJZJZDhi_TzA
+metaSortKey: -1651707415802
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
