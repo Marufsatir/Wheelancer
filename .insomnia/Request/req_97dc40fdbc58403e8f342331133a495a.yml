@@ -1,0 +1,35 @@
+_id: req_97dc40fdbc58403e8f342331133a495a
+type: Request
+parentId: fld_64db6e1c810146cbabd86d9fd3ce1d4e
+modified: 1651696161758
+created: 1651692349101
+url: http://wheelancer.hopto.org:3013/transport/add
+name: Add Transportation
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"vehicle_id": 1,
+    	"courier_pos_long": 39.880328,
+    	"courier_pos_lat": 32.76012,
+    	"departure_date": "2022-02-01T00:00:00.000Z",
+    	"arrival_date": "2022-02-03T00:00:00.000Z"
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_f011d119cd694a10a242be74e6031ac0
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNjg2NzIzLCJleHAiOjE2NTIyOTE1MjN9.zOyjhvx-vRJVjdmk1ksL3MP-GMG3wSv5WoVRMYgVnBs
+metaSortKey: -1651508996954.5312
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

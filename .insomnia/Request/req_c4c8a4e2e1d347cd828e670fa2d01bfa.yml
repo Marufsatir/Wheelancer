@@ -1,72 +1,27 @@
 _id: req_c4c8a4e2e1d347cd828e670fa2d01bfa
 type: Request
 parentId: fld_dcf9fc54692445cf933042e6a11b18f2
-modified: 1651673225625
+modified: 1651695885531
 created: 1651672362260
 url: http://wheelancer.hopto.org:3013/package/addcustomerpackage
 name: Add A Package to Customer
 description: ""
 method: POST
 body:
-  mimeType: application/octet-stream
-  fileName: ""
+  mimeType: application/json
+  text: |-
+    {
+    	"vehicle_id": "",
+    	"courier_pos_long": "",
+    	"courier_pos_lat": "",
+    	"departure_date": "",
+    	"arrival_date": ""
+    }
 parameters: []
 headers:
   - name: Content-Type
-    value: application/octet-stream
+    value: application/json
     id: pair_e240749a85564dea832aa0eb6b087188
-  - id: pair_52608fd4606e4505abb51aef205bebeb
-    name: length
-    value: "1"
-    description: ""
-  - id: pair_9dd88dd4cbf44a97ac088d64409d0838
-    name: width
-    value: "312"
-    description: ""
-  - id: pair_b0001f225fbe4b90abd99d0b9291ce6c
-    name: height
-    value: "231"
-    description: ""
-  - id: pair_4c7bb6a746cf4d5596c57ae7081498ff
-    name: weight
-    value: "31"
-    description: ""
-  - id: pair_172383a321684179b9822e6df23ee729
-    name: type
-    value: safa
-    description: ""
-  - id: pair_6c4df8a455a7404383b4a22e9dbc971c
-    name: s_long
-    value: "123"
-    description: ""
-  - id: pair_7f6dd98fc9b24d6ebfd483d74626847a
-    name: s_lat
-    value: "1"
-    description: ""
-  - id: pair_209316cbaf694838b917ac68768dca92
-    name: d_long
-    value: "2"
-    description: ""
-  - id: pair_6a344318d47c421798a110b2d2c794fe
-    name: d_lat
-    value: "3"
-    description: ""
-  - id: pair_f6963abadb714133b75af9b30be7ae8d
-    name: receiver_email
-    value: asdasd
-    description: ""
-  - id: pair_46c8e22f4fc84168bc61af25cdffd155
-    name: receiver_fullname
-    value: asdasd
-    description: ""
-  - id: pair_d76793db7f484006b1fecd978cba6d65
-    name: s_city
-    value: asda
-    description: ""
-  - id: pair_84b4435b20e84986bc5ea86dd4143e1b
-    name: d_city
-    value: asdasd
-    description: ""
 authentication:
   type: bearer
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2OSwidHlwZSI6MCwiaWF0IjoxNjUxNjAyMjk2LCJleHAiOjE2NTIyMDcwOTZ9.cI65vKtUHf2bMj0UF03dNFwxPmWuf8jAWhwPxarUosg
