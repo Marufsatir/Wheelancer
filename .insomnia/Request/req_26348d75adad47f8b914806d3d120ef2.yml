@@ -1,0 +1,39 @@
+_id: req_26348d75adad47f8b914806d3d120ef2
+type: Request
+parentId: fld_64db6e1c810146cbabd86d9fd3ce1d4e
+modified: 1651675982744
+created: 1651674591098
+url: http://wheelancer.hopto.org:3013/transport/nearpackages
+name: Get Near Packages
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_82997dec42d94bff982c214c79921d5c
+    name: s_city
+    value: Ankara
+    description: ""
+  - id: pair_61551afd7f754e45bc0a7e83efe05f60
+    name: curr_pos_long
+    value: "39.881817"
+    description: ""
+  - id: pair_5f5a973e5bbe461dad5ba4f319113e80
+    name: curr_pos_lat
+    value: "32.753892"
+    description: ""
+  - id: pair_6cc6efcbdf8c4caead738be352ce5e9e
+    name: radius
+    value: "100"
+    description: ""
+headers: []
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNjcyNDI5LCJleHAiOjE2NTIyNzcyMjl9.uYE6XdfQcrwuGjSVg16tKtLsXI-CEoCGJZJZDhi_TzA
+metaSortKey: -1651508996904.5312
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
