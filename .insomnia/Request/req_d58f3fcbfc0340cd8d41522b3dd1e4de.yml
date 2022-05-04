@@ -1,0 +1,31 @@
+_id: req_d58f3fcbfc0340cd8d41522b3dd1e4de
+type: Request
+parentId: fld_d42342d057de4d7597c174353de47331
+modified: 1651707461891
+created: 1651707415752
+url: http://wheelancer.hopto.org:3013/user/addbalance
+name: Add Balance
+description: ""
+method: PUT
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"amount": 12.5
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_587f5b375fab4165860561f54870ca57
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2OSwidHlwZSI6MCwiaWF0IjoxNjUxNjk1NDY3LCJleHAiOjE2NTIzMDAyNjd9.5p-8MSlAnmRyGqlINu3UABHk3peHYnjb_nHqRIdYGMc
+metaSortKey: -1651707415752
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
