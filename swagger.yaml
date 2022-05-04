@@ -531,3 +531,285 @@ paths:
                       
         '401':
           description: Unauthorized - Token is expired or wrong.
+          
+#---<<<<<<<<<<<<<<<<<<<<<<<<<<<Package>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  /package/customerpackages:
+    get:
+      security:
+        - Super-Authorization: []
+        
+      tags:
+        - "Package"
+
+      description: Gets customer's own packages return all of them
+      
+      responses:
+        '200':
+          description: OK - Successfully registered.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pid:
+                    type: integer
+                  cid:
+                    type: integer
+                  transport_id:
+                    type: integer
+                  length:
+                    type: number
+                  width:
+                    type: number
+                  height:
+                    type: number
+                  weight:
+                    type: number
+                  type:
+                    type: string
+                  s_long:
+                    type: number
+                  s_lat:
+                    type: number
+                  d_long:
+                    type: number
+                  d_lat:
+                    type: number
+                  status:
+                    type: string
+                  receiver_email:
+                    type: string
+                  estimated_delivery_date:
+                    type: string
+                  chat_channel_id:
+                    type: string
+                  s_city:
+                    type: string
+                  d_city:
+                    type: string
+        '406':
+          description: Not Acceptable - User with same username or email already exists.
+        '500':
+          description: Internal Server Error
+          
+  /package/customerpackage:
+    get:
+      security:
+        - Super-Authorization: []
+        
+      tags:
+        - "Package"
+
+      description: Gets customer's own package
+      
+      parameters:
+        - in: query
+          name: package_id
+          schema:
+            type: integer
+          description: Id of the package
+          example: 1
+      
+      responses:
+        '200':
+          description: OK - Successfully registered.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pid:
+                    type: integer
+                  cid:
+                    type: integer
+                  transport_id:
+                    type: integer
+                  length:
+                    type: number
+                  width:
+                    type: number
+                  height:
+                    type: number
+                  weight:
+                    type: number
+                  type:
+                    type: string
+                  s_long:
+                    type: number
+                  s_lat:
+                    type: number
+                  d_long:
+                    type: number
+                  d_lat:
+                    type: number
+                  status:
+                    type: string
+                  receiver_email:
+                    type: string
+                  estimated_delivery_date:
+                    type: string
+                  chat_channel_id:
+                    type: string
+                  s_city:
+                    type: string
+                  d_city:
+                    type: string
+        '404':
+          description: Package could not found.
+        '500':
+          description: Internal Server Error
+          
+    delete:
+      security:
+        - Super-Authorization: []
+      tags:
+        - "Package"
+
+      description: Deletes customer's package to the system.
+      
+      responses:
+        '200':
+          description: OK - Package successfully removed from system.
+        '403':
+          description: Package could not removed from system.
+        '404':
+          description: Package could not be found.
+        '409':
+          description: Package has an active transportation process you can not remove it from the system.
+        '500':
+          description: Internal Server Error
+          
+  /package/addcustomerpackage:
+    post:
+      security:
+        - Super-Authorization: []
+        
+      tags:
+        - "Package"
+
+      description: Add customer's package to the system.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                length:
+                  type: number
+                width:
+                  type: number
+                height:
+                  type: number
+                weight:
+                  type: number
+                type:
+                  type: string
+                s_long:
+                  type: number
+                s_lat:
+                  type: number
+                d_long:
+                  type: number
+                d_lat:
+                  type: number
+                receiver_email:
+                  type: string
+                s_city:
+                  type: string
+                d_city:
+                  type: string
+                image_raw:
+                  type: string
+              example:
+                length: 12.5
+                width: 14.2
+                height: 5.1
+                weight: 12.4
+                type: Flammable,Oxidizing
+                s_long: -99.79118
+                s_lat: 17.08936
+                d_long: -91.79118
+                d_lat: 19.08936
+                receiver_email: ""
+                s_city: ""
+                d_city : ""
+                image_raw: BASE64IMG
+                
+      responses:
+        '200':
+          description: OK - Package added successfully.
+        '403':
+          description: Forbidden - Package could not be added.
+        '500':
+          description: Internal Server Error
+  
+  /package/allpackageproofs:
+    get:
+      security:
+        - Super-Authorization: []
+        
+      tags:
+        - "Package"
+
+      description: This works for both customer and courier.
+      
+      parameters:
+        - in: query
+          name: package_id
+          schema:
+            type: integer
+          description: Id of the package
+          example: 1
+      
+      responses:
+        '200':
+          description: OK - Successfully registered.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  proof_id:
+                    type: integer
+                  type:
+                    type: integer
+                  image:
+                    type: integer
+                  date:
+                    type: number
+        '500':
+          description: Internal Server Error
+          
+          
+  /package/packageproof:
+    get:
+      security:
+        - Super-Authorization: []
+        
+      tags:
+        - "Package"
+
+      description: Get Package Proof Data
+      
+      parameters:
+        - in: query
+          name: image_uuid
+          schema:
+            type: integer
+          description: Id of the image
+          example: 1
+      
+      responses:
+        '200':
+          description: OK - Successfully registered.
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: Proof image could not found.
+        '405':
+          description: Image file is missing in our system.
+        '500':
+          description: Internal Server Error
