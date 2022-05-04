@@ -57,3 +57,8 @@
 
 -- Add Proof
 "INSERT INTO Package_Proofs(pid,type,image) VALUES(?,?,?)", [pid,type,image]
+
+-- Tek belge bakma
+"SELECT * FROM Document d LEFT JOIN Package p ON (p.pid = pp.pid) LEFT JOIN Transportation t ON (p.transport_id = t.transport_id) WHERE p.cid = ? OR t.courier_id = ?", [cid]
+
+"SELECT * FROM Document WHERE user_id = ?", [userID]

@@ -57,11 +57,9 @@ CREATE TABLE IF NOT EXISTS Courier_Badge (
 );
 
 CREATE TABLE IF NOT EXISTS Document (
-	documentID INT(10) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-	user_id INT(10) NOT NULL,
+	document_id INT(10) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+	user_id INT(10) NOT NULL UNIQUE,
 	document VARCHAR(36) NOT NULL UNIQUE,
-	type INT(1) NOT NULL,
-	is_verified TINYINT NOT NULL,
 	FOREIGN KEY(user_id) REFERENCES Courier(user_id) ON DELETE CASCADE
 );
 
@@ -105,14 +103,15 @@ CREATE TABLE IF NOT EXISTS Package (
 	width DECIMAL(6,3) NOT NULL,
 	height DECIMAL(6,3) NOT NULL,
 	weight DECIMAL(6,3) NOT NULL,
-	type SET('Explosives','Gases','Flammable','Oxidizing','Toxic and Infectious','Radioactive Material','Corrosives') NOT NULL,
+	type SET('Explosives','Gases','Flammable','Oxidizing','Toxic and Infectious','Radioactive Material','Corrosives') DEFAULT NULL,
 	s_long DECIMAL(10,6) NOT NULL,
 	s_lat DECIMAL(10,6) NOT NULL,
 	d_long DECIMAL(10,6) NOT NULL,
 	d_lat DECIMAL(10,6) NOT NULL,
 	status `status` ENUM('CREATED','NEGOTIATED','REJECTED','PICKEDUP','DELIVERED','CONFIRMED') NOT NULL DEFAULT 'CREATED',
+	receiver_fullname VARCHAR(20) NOT NULL,
 	receiver_email VARCHAR(64) NOT NULL,
-	estimated_delivery_date DATE,
+	estimated_delivery_date DATE DEFAULT NULL,
 	chat_channel_id int(10) DEFAULT NULL,
 	s_city VARCHAR(32) NOT NULL,
 	d_city VARCHAR(32) NOT NULL,
