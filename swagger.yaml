@@ -11,6 +11,16 @@ servers:
 
 #---<<<<<<<<<<<<<<<<<<<<<<<<<<<USER>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 components:
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+    Super-Authorization:          
+      type: apiKey
+      name: super_auth
+      in: header
+      description: 'Super Special key for creating couriers => superadmin'  
   schemas:
     User: 
            type: object
@@ -38,21 +48,9 @@ components:
                name: Mahmut
                password: testtset
 
-  securitySchemes:
-    Authorization:          
-      type: http
-      scheme: bearer
-      name: Authorization
-      in: header
-      description: 'Use that token => admin'
-    Super-Authorization:          
-      type: apiKey
-      name: super_auth
-      in: header
-      description: 'Super Special key for creating librarians => superadmin'  
          
 security:
-   - Authorization: []    
+    - bearerAuth: []
 
 paths:
 #---<<<<<<<<<<<<<<<<<<<<<<<<<<<System>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -141,10 +139,7 @@ paths:
           description: Unauthorized - Wrong username or email.
 
   /user/register:
-    post:
-      security:
-        - Super-Authorization: []
-        
+    post:        
       tags:
         - "User-General"
 
@@ -195,6 +190,8 @@ paths:
 
   /user/setbio:
     put:
+      security:
+        - bearerAuth: []
       tags:
         - "User-General"
 
@@ -222,6 +219,8 @@ paths:
 
   /user/setemail:
     put:
+      security:
+        - bearerAuth: []
       tags:
         - "User-General"
 
@@ -249,6 +248,8 @@ paths:
 
   /user/addbalance:
     put:
+      security:
+        - bearerAuth: []
       tags:
         - "User-General"
 
@@ -276,6 +277,8 @@ paths:
 
   /user/setpassword:
     put:
+      security:
+        - bearerAuth: []
       tags:
         - "User-General"
 
@@ -303,6 +306,8 @@ paths:
 
   /user/setname:
     put:
+      security:
+        - bearerAuth: []
       tags:
         - "User-General"
 
@@ -331,6 +336,8 @@ paths:
 
   /user/setusername:
     put:
+      security:
+        - bearerAuth: []
       tags:
         - "User-General"
 
@@ -358,6 +365,8 @@ paths:
 
   /user/getunverifiedcouriers:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - "User-Admin"
 
@@ -394,6 +403,8 @@ paths:
 
   /user/getverifiedcouriers:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - "User-Admin"
 
@@ -429,6 +440,8 @@ paths:
 
   /user/verifycourier:
     put:
+      security:
+        - bearerAuth: []
       tags:
         - "User-Admin"
       description: For verifying the courier
@@ -458,6 +471,8 @@ paths:
 
   /transport/alltransports:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - "Transport"
 
@@ -493,6 +508,8 @@ paths:
 
   /transport/mytransports:
     get:
+      security:
+        - bearerAuth: []
       tags:
         - "User-Customer"
       description: Listing customer's transports
@@ -536,7 +553,7 @@ paths:
   /package/customerpackages:
     get:
       security:
-        - Super-Authorization: []
+        - bearerAuth: []
         
       tags:
         - "Package"
@@ -595,8 +612,7 @@ paths:
   /package/customerpackage:
     get:
       security:
-        - Super-Authorization: []
-        
+        - bearerAuth: []
       tags:
         - "Package"
 
@@ -682,7 +698,7 @@ paths:
   /package/addcustomerpackage:
     post:
       security:
-        - Super-Authorization: []
+        - bearerAuth: []
         
       tags:
         - "Package"
@@ -747,7 +763,7 @@ paths:
   /package/allpackageproofs:
     get:
       security:
-        - Super-Authorization: []
+        - bearerAuth: []
         
       tags:
         - "Package"
@@ -785,7 +801,7 @@ paths:
   /package/packageproof:
     get:
       security:
-        - Super-Authorization: []
+        - bearerAuth: []
         
       tags:
         - "Package"

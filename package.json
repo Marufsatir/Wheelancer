@@ -24,7 +24,7 @@
     },
     "scripts": {
         "start": "node Server.js",
-        "test": "nodemon ./Server.js"
+        "test": "nodemon ./Server.js -e js,json,yaml"
     },
     "keywords": [],
     "author": "",
