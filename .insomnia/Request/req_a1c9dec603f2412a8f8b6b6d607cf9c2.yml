@@ -1,7 +1,7 @@
 _id: req_a1c9dec603f2412a8f8b6b6d607cf9c2
 type: Request
 parentId: fld_d42342d057de4d7597c174353de47331
-modified: 1651673243214
+modified: 1651686741176
 created: 1651620077556
 url: http://wheelancer.hopto.org:3013/user/addvehicle
 name: Add Vehicle
@@ -18,7 +18,8 @@ body:
       "max_height": 80.000,
     	"max_weight": 40.000,
     	"horsepower": 120,
-    	"registration_plate": "06MS8967"
+    	"registration_plate": "06MS1967",
+    	"type": "asdd"
     }
 
 parameters: []
@@ -28,7 +29,7 @@ headers:
     id: pair_f011d119cd694a10a242be74e6031ac0
 authentication:
   type: bearer
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2OSwidHlwZSI6MCwiaWF0IjoxNjUxNjIwMTg1LCJleHAiOjE2NTIyMjQ5ODV9.r_uR3C6dgfbGMDY7wc5obDHR_YuTs9ToLn9DTF79o9U
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNjg2NzIzLCJleHAiOjE2NTIyOTE1MjN9.zOyjhvx-vRJVjdmk1ksL3MP-GMG3wSv5WoVRMYgVnBs
 metaSortKey: -1651508996906.875
 isPrivate: false
 settingStoreCookies: true

@@ -1,7 +1,7 @@
 _id: req_d51d6977f6024382a6427c8f22745e64
 type: Request
 parentId: fld_d1d43ffe7cdd45cf964697b100667542
-modified: 1651628290993
+modified: 1651678572281
 created: 1651614330525
 url: http://wheelancer.hopto.org:3013/package/packageproof
 name: Get Package Proof Data
@@ -11,7 +11,7 @@ body: {}
 parameters:
   - id: pair_7504b7e1d6784f2dafa43323a6ee7bf9
     name: image_uuid
-    value: new image yooo
+    value: 8ad07b77-0751-421f-b848-bffd5e6e929c
     description: ""
 headers:
   - id: pair_eb057aadf37d42bf848356996190b144

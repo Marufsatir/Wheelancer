@@ -1,23 +1,18 @@
 _id: req_929602bc510c4240a69e33682c7f17f7
 type: Request
 parentId: fld_dcf9fc54692445cf933042e6a11b18f2
-modified: 1651620052596
+modified: 1651680621948
 created: 1651509171353
 url: http://wheelancer.hopto.org:3013/package/customerpackages
 name: Get Customer's All Packages
 description: ""
 method: GET
-body:
-  mimeType: application/json
-  text: ""
+body: {}
 parameters: []
-headers:
-  - name: Content-Type
-    value: application/json
-    id: pair_f011d119cd694a10a242be74e6031ac0
+headers: []
 authentication:
   type: bearer
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyMCwidHlwZSI6MCwiaWF0IjoxNjUxNTMwODY0LCJleHAiOjE2NTE1MzExNjR9.Vr37RfvQf8lpNkr4mReEUyEzKsPorUDDVt_LjXvGpcI
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNjcyNDI5LCJleHAiOjE2NTIyNzcyMjl9.uYE6XdfQcrwuGjSVg16tKtLsXI-CEoCGJZJZDhi_TzA
 metaSortKey: -1651508996903.75
 isPrivate: false
 settingStoreCookies: true
