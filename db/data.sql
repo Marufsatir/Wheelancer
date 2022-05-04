@@ -1,5 +1,5 @@
 -- <USER>
-INSERT INTO `user` (`user_id`, `name`, `surname`, `birthday`, `id_num`, `email`, `password`) VALUES
+INSERT INTO User (user_id, name, surname, birthday, id_num, email, password) VALUES
 (1, 'Berk', 'Yildiz', '2022-05-01', '2147483647', 'uyuzgamer@wheelancer.com', 'berk123'),
 (2, 'Jake', 'Peralta', '0000-00-00', '111111111', 'jake@a.com', 'amy123'),
 (3, 'Amy', 'Santiago', '0000-00-00', '111111112', 'amy@99.com', 'binder123'),
@@ -14,7 +14,7 @@ INSERT INTO `user` (`user_id`, `name`, `surname`, `birthday`, `id_num`, `email`,
 (70,'maruf','satir','2022-05-03','31246579812','m.maruf.99@hotmail.com','616161');
 
 -- <ADMIN>
-INSERT INTO `admin` (`user_id`) VALUES (1);
+INSERT INTO Admin (user_id) VALUES (1);
 
 -- <COURIER>
 INSERT INTO Courier(user_id) VALUES (2),(3),(70);
