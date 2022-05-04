@@ -1008,7 +1008,13 @@ paths:
         - "Package"
 
       description: Deletes customer's package to the system.
-      
+      parameters:
+        - in: query
+          name: package_id
+          schema:
+            type: integer
+          description: Id of the package
+          example: 1
       responses:
         '200':
           description: OK - Package successfully removed from system.

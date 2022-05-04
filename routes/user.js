@@ -36,12 +36,7 @@ var mailObj = nodemailer.createTransport({
 const router = express.Router();
 
 
-/*Only checks token for persistent login.
-only header
-
-out (200):
-OK
-*/
+//Only checks token for persistent login.
 router.post("/checktoken", decodeAWT, async(req, res) => {
 
     try {
@@ -57,30 +52,7 @@ router.post("/checktoken", decodeAWT, async(req, res) => {
 
 })
 
-/* Add vehicle to courier.
-body:
-{
-	"model": "Golf",
-	"brand": "Volkswagen",
-	"max_length": 120.000,
-	"max_width": 90.000,
-  "max_height": 80.000,
-	"max_weight": 40.000,
-	"horsepower": 120,
-	"registration_plate": "06MS8967"
-}
-
-out (200):
-{
-    result: 'Vehicle successfully added.'
-}
-
-out (401):
-
-{
-    error: 'User must be courier.'
-}
-*/
+// Add vehicle to courier.
 router.post("/addvehicle", decodeAWT, async(req, res) => {
 
     try {
@@ -112,7 +84,7 @@ router.post("/addvehicle", decodeAWT, async(req, res) => {
 
         } else { // User entered mail or username that has a user.
             res.status(407).json({
-                error: 'Vehicle could not added.'
+                error: 'Vehicle could not be added.'
             })
         }
 
@@ -123,16 +95,7 @@ router.post("/addvehicle", decodeAWT, async(req, res) => {
 
 })
 
-/* Returns courier's vehicles
-
-Nothing except header
-
-out (200):
-{
-    "result": [<SQL>(Vehicle) rows]
-}
-
-*/
+// Returns courier's vehicles
 router.get("/myvehicles", decodeAWT, async(req, res) => {
 
     try {
@@ -161,22 +124,7 @@ router.get("/myvehicles", decodeAWT, async(req, res) => {
     }
 })
 
-/*
-Adds document to the courier to be verified
-input: File
-
-out (200):
-{
-    result: 'Document added successfully.'
-}
-
-out (402):
-
-{
-    error: 'Document could not added.'
-}
-
-*/
+// Adds document to the courier to be verified
 router.post("/adddocument", upload.any(), decodeAWT, async(req, res) => {
 
     try {
@@ -216,23 +164,7 @@ router.post("/adddocument", upload.any(), decodeAWT, async(req, res) => {
     }
 })
 
-/* Gets document data for courier.
-
-only header
-
-out (200):
-Image Data
-
-out(405):
-{
-    error: 'Document file is missing in our system.'
-}
-out(404):
-{
-    error: 'Document could not found.'
-}
-
-*/
+// Gets document data for courier.
 router.get("/mydocument", decodeAWT, async(req, res) => {
 
     try {
@@ -272,32 +204,7 @@ router.get("/mydocument", decodeAWT, async(req, res) => {
     }
 })
 
-/* Register user to the system.
-Body:
-{
-  "name": "John",
-	"surname": "asdasd",
-	"birthday": "2022-05-01T20:41:21.457Z",
-	"idnum": 123131323,
-	"email": "test@wheeasdasdasdlancer.com",
-  "password": "testtset",
-	"type": 0
-}
-
-out (200):
-
-{
-    result: {
-        user: <SQL(User)>,
-        token: *JWT TOKEN*
-    }
-}
-
-out (406):
-{
-    error: 'User already exists.'
-}
-*/
+// Register user to the system.
 router.post("/register", async(req, res) => {
 
     try {
@@ -378,32 +285,7 @@ router.post("/register", async(req, res) => {
 
 })
 
-/*
-Send mail verificaiton for users.
-Only header
-
-out (429):
-{
-    error: 'User requested verification code more than 5 times. Please try again in 10 minutes.'
-}
-
-out (409):
-
-{
-    error: 'User is already verified.'
-}
-
-out (500):
-{
-    error: 'Could not send verification code.'
-}
-
-out (200):
-{
-    result: 'Mail sent please check your mailbox.'
-}
-
-*/
+// Send mail verificaiton for users.
 router.post("/sendverification", decodeAWT, async(req, res) => {
     try {
         res.type('json')
@@ -541,47 +423,7 @@ router.post("/sendverification", decodeAWT, async(req, res) => {
 
 })
 
-/*
-Checks requested verification code to verify user.
-Body:
-
-{
-	"code": "6208"
-}
-
-out (409):
-{
-    error: 'User is already verified.'
-}
-
-out (429):
-{
-    error: 'Has made too many wrong entry please request a new code.'
-}
-
-out(401):
-{
-    error: 'Please send a verification code.'
-}
-
-out(200):
-
-{
-    result: 'Successfully verified.'
-}
-
-out(403):
-{
-    error: 'Wrong verification code.'
-}
-
-out(408):
-
-{
-    error: 'Verification code expired.'
-}
-
-*/
+// Checks requested verification code to verify user.
 router.post("/checkverification", decodeAWT, async(req, res) => {
 
     try {
@@ -651,23 +493,7 @@ router.post("/checkverification", decodeAWT, async(req, res) => {
 })
 
 
-/* Performs login operation and give user JWT token
-
-out (200):
-
-{
-    result: {
-        user: <SQL(User)>,
-        token: *JWT Token*,
-        type: 0
-    }
-}
-
-out (401):
-{
-    error: 'Wrong credentials.'
-}
-*/
+// Performs login operation and give user JWT token
 router.post("/login", async(req, res) => {
 
     try {
