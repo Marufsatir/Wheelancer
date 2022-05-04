@@ -1,0 +1,23 @@
+_id: req_8cf588d87e094c608950e02ffb1fa862
+type: Request
+parentId: fld_64db6e1c810146cbabd86d9fd3ce1d4e
+modified: 1651692905237
+created: 1651692778464
+url: http://wheelancer.hopto.org:3013/transport/getcouriertransports
+name: Get Courier Transports
+description: ""
+method: GET
+body: {}
+parameters: []
+headers: []
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNjcyNDI5LCJleHAiOjE2NTIyNzcyMjl9.uYE6XdfQcrwuGjSVg16tKtLsXI-CEoCGJZJZDhi_TzA
+metaSortKey: -1651508996929.5312
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
