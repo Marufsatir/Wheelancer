@@ -5,6 +5,20 @@ let crypto = require('crypto');
 const nodemailer = require("nodemailer");
 const { decodeAWT } = require("./utilities.js")
 require('dotenv').config()
+const AWS = require('aws-sdk');
+const fs = require("fs")
+const { v4: uuidv4 } = require('uuid');
+const multer = require('multer')
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage });
+
+const s3 = new AWS.S3({
+    region: process.env.AWS_BUCKET_REGION,
+    credentials: new AWS.SharedIniFileCredentials({
+        profile: process.env.AWS_BUCKET_NAME
+    })
+})
+
 
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY
@@ -22,7 +36,12 @@ var mailObj = nodemailer.createTransport({
 const router = express.Router();
 
 
-//Only checks token with middleware.
+/*Only checks token for persistent login.
+only header
+
+out (200):
+OK
+*/
 router.post("/checktoken", decodeAWT, async(req, res) => {
 
     try {
@@ -38,8 +57,30 @@ router.post("/checktoken", decodeAWT, async(req, res) => {
 
 })
 
+/* Add vehicle to courier.
+body:
+{
+	"model": "Golf",
+	"brand": "Volkswagen",
+	"max_length": 120.000,
+	"max_width": 90.000,
+  "max_height": 80.000,
+	"max_weight": 40.000,
+	"horsepower": 120,
+	"registration_plate": "06MS8967"
+}
 
+out (200):
+{
+    result: 'Vehicle successfully added.'
+}
 
+out (401):
+
+{
+    error: 'User must be courier.'
+}
+*/
 router.post("/addvehicle", decodeAWT, async(req, res) => {
 
     try {
@@ -55,11 +96,16 @@ router.post("/addvehicle", decodeAWT, async(req, res) => {
         let horsepower = req.body.horsepower
         let registration_plate = req.body.registration_plate
 
+        if (req.decoded.type != 1) {
+            return res.status(401).json({
+                error: 'User must be courier.'
+            })
+        }
         let resultAddVehicle = await sql.addVehicle(user_id, model, brand, max_length, max_width, max_height, max_weight, horsepower, registration_plate);
 
         if (resultAddVehicle && resultAddVehicle.affectedRows) {
 
-            res.status(407).json({
+            res.status(200).json({
                 result: 'Vehicle successfully added.'
             })
 
@@ -70,7 +116,6 @@ router.post("/addvehicle", decodeAWT, async(req, res) => {
             })
         }
 
-
     } catch (error) {
         res.sendStatus(500);
         console.log(error)
@@ -78,6 +123,181 @@ router.post("/addvehicle", decodeAWT, async(req, res) => {
 
 })
 
+/* Returns courier's vehicles
+
+Nothing except header
+
+out (200):
+{
+    "result": [<SQL>(Vehicle) rows]
+}
+
+*/
+router.get("/myvehicles", decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+        let user_id = req.decoded.user_id
+
+        let resultGetVehicles = await sql.getVehicles(user_id);
+
+        if (resultGetVehicles && resultGetVehicles.length) {
+
+            res.status(200).json({
+                result: resultGetVehicles
+            })
+
+
+        } else {
+            res.status(200).json({
+                result: []
+            })
+        }
+
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+})
+
+/*
+Adds document to the courier to be verified
+input: File
+
+out (200):
+{
+    result: 'Document added successfully.'
+}
+
+out (402):
+
+{
+    error: 'Document could not added.'
+}
+
+*/
+router.post("/adddocument", upload.any(), decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+        let user_id = req.decoded.user_id
+        let fileKey = uuidv4()
+
+
+
+        let resultAddDocument = await sql.addDocument(user_id, fileKey);
+
+        if (resultAddDocument && resultAddDocument.affectedRows) {
+
+
+            await s3.upload({
+                Bucket: process.env.AWS_BUCKET_NAME,
+                Key: fileKey,
+                Body: req.files[0].buffer,
+                // ContentEncoding: 'image/png',
+                // ContentEncoding: 'base64',
+            }).promise()
+
+
+
+            res.status(200).json({
+                result: 'Document added successfully.'
+            })
+        } else {
+            res.status(402).json({
+                error: 'Document could not added.'
+            })
+        }
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+})
+
+/* Gets document data for courier.
+
+only header
+
+out (200):
+Image Data
+
+out(405):
+{
+    error: 'Document file is missing in our system.'
+}
+out(404):
+{
+    error: 'Document could not found.'
+}
+
+*/
+router.get("/mydocument", decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+        let user_id = req.decoded.user_id
+
+        let resultGetDocumentImage = await sql.getMyDocument(user_id);
+
+        if (resultGetDocumentImage && resultGetDocumentImage.length) {
+            try {
+                raw_image = await s3.getObject({
+
+                    Bucket: process.env.AWS_BUCKET_NAME,
+                    Key: resultGetDocumentImage[0].document,
+                }).promise();
+
+
+            } catch (error) {
+
+                console.log(error);
+                return res.status(405).json({
+                    error: 'Document file is missing in our system.'
+                });
+            }
+            res.set('Content-Type', 'image/png')
+            res.status(200).send(raw_image.Body);
+
+        } else {
+            res.status(404).json({
+                error: 'Document could not found.'
+            })
+        }
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+})
+
+/* Register user to the system.
+Body:
+{
+  "name": "John",
+	"surname": "asdasd",
+	"birthday": "2022-05-01T20:41:21.457Z",
+	"idnum": 123131323,
+	"email": "test@wheeasdasdasdlancer.com",
+  "password": "testtset",
+	"type": 0
+}
+
+out (200):
+
+{
+    result: {
+        user: <SQL(User)>,
+        token: *JWT TOKEN*
+    }
+}
+
+out (406):
+{
+    error: 'User already exists.'
+}
+*/
 router.post("/register", async(req, res) => {
 
     try {
@@ -89,6 +309,7 @@ router.post("/register", async(req, res) => {
         let email = req.body.email
         let password = req.body.password
         let type = req.body.type
+        let super_auth = req.headers.super_auth
 
         let isVerified;
 
@@ -124,11 +345,11 @@ router.post("/register", async(req, res) => {
                 expiresIn: process.env.AUTH_EXP_TIME
             })
 
-            if (type == 0)
+            if (type == 0) // Customer
                 await sql.addCustomer(user_id);
             else if (type == 1) //Courier
                 await sql.addCourier(user_id);
-            else if (type == 2 && super_auth == superkey) //Admin 
+            else if (type == 2 && super_auth == process.env.ADMIN_SUPER_KEY) //Admin 
                 await sql.addAdmin(user_id);
 
 
@@ -157,6 +378,32 @@ router.post("/register", async(req, res) => {
 
 })
 
+/*
+Send mail verificaiton for users.
+Only header
+
+out (429):
+{
+    error: 'User requested verification code more than 5 times. Please try again in 10 minutes.'
+}
+
+out (409):
+
+{
+    error: 'User is already verified.'
+}
+
+out (500):
+{
+    error: 'Could not send verification code.'
+}
+
+out (200):
+{
+    result: 'Mail sent please check your mailbox.'
+}
+
+*/
 router.post("/sendverification", decodeAWT, async(req, res) => {
     try {
         res.type('json')
@@ -166,9 +413,7 @@ router.post("/sendverification", decodeAWT, async(req, res) => {
 
         expireDate.setMinutes(expireDate.getMinutes() + parseInt(process.env.MAIL_EXP_TIME))
 
-
         let user_id = req.decoded.user_id
-
 
         let resultListVerCodes = await sql.listVerificationCodes(user_id);
 
@@ -296,6 +541,47 @@ router.post("/sendverification", decodeAWT, async(req, res) => {
 
 })
 
+/*
+Checks requested verification code to verify user.
+Body:
+
+{
+	"code": "6208"
+}
+
+out (409):
+{
+    error: 'User is already verified.'
+}
+
+out (429):
+{
+    error: 'Has made too many wrong entry please request a new code.'
+}
+
+out(401):
+{
+    error: 'Please send a verification code.'
+}
+
+out(200):
+
+{
+    result: 'Successfully verified.'
+}
+
+out(403):
+{
+    error: 'Wrong verification code.'
+}
+
+out(408):
+
+{
+    error: 'Verification code expired.'
+}
+
+*/
 router.post("/checkverification", decodeAWT, async(req, res) => {
 
     try {
@@ -346,11 +632,11 @@ router.post("/checkverification", decodeAWT, async(req, res) => {
             })
 
         } else if (expireDate - new Date() < 0) {
-            res.status(401).json({
+            res.status(408).json({
                 error: 'Verification code expired.'
             })
         } else {
-            res.status(401).json({
+            res.status(403).json({
                 error: 'Wrong verification code.'
             })
 
@@ -365,6 +651,71 @@ router.post("/checkverification", decodeAWT, async(req, res) => {
 })
 
 
+/* Performs login operation and give user JWT token
+
+out (200):
+
+{
+    result: {
+        user: <SQL(User)>,
+        token: *JWT Token*,
+        type: 0
+    }
+}
+
+out (401):
+{
+    error: 'Wrong credentials.'
+}
+*/
+router.post("/login", async(req, res) => {
+
+    try {
+
+        // res.type('json')
+        // console.log(req.params);
+        let email = req.body.email
+        let password = req.body.password
+            // var date = new Date()
+            // date.setHours(date.getHours() + 1);
+
+        let resultCheckUser = await sql.loginUser(email, password)
+            //If user exists
+        if (resultCheckUser.length) {
+            let user_id = resultCheckUser[0].user_id
+
+            // await sql.addAuth(token = tokgen.generate(), user_id)
+            let resultCheckUserType = await sql.checkUserType(user_id)
+
+            let type = resultCheckUserType[0].type
+
+            let token = jwt.sign({
+                user_id: user_id,
+                type: type
+            }, PRIVATE_KEY, {
+                expiresIn: process.env.AUTH_EXP_TIME
+            })
+
+            res.status(200).json({
+                result: {
+                    user: resultCheckUser[0],
+                    token: token,
+                    type: type
+                }
+            });
+
+        } else {
+            res.status(401).json({
+                error: 'Wrong credentials.'
+            });
+        }
+
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+
+})
 
 
 //Disabled
@@ -536,61 +887,7 @@ router.put("/setusername", async(req, res) => {
 })
 
 
-
-
-
-router.post("/login", async(req, res) => {
-
-    try {
-
-        // res.type('json')
-        // console.log(req.params);
-        let email = req.body.email
-        let password = req.body.password
-            // var date = new Date()
-            // date.setHours(date.getHours() + 1);
-
-        let resultCheckUser = await sql.loginUser(email, password)
-            //If user exists
-        if (resultCheckUser.length) {
-            let user_id = resultCheckUser[0].user_id
-
-            // await sql.addAuth(token = tokgen.generate(), user_id)
-            let resultCheckUserType = await sql.checkUserType(user_id)
-
-            let type = resultCheckUserType[0].type
-
-            let token = jwt.sign({
-                user_id: user_id,
-                type: type
-            }, PRIVATE_KEY, {
-                expiresIn: process.env.AUTH_EXP_TIME
-            })
-
-            res.status(200).json({
-                result: {
-                    user: resultCheckUser[0],
-                    token: token,
-                    type: type
-                }
-            });
-
-        } else {
-            res.status(401).json({
-                error: 'Wrong credentials.'
-            });
-        }
-
-    } catch (error) {
-        res.sendStatus(500);
-        console.log(error)
-    }
-
-})
-
-
-
-
+//Disabled
 router.get("/getuser", async(req, res) => {
 
     try {
@@ -616,82 +913,6 @@ router.get("/getuser", async(req, res) => {
 
 })
 
-
-//Disabled
-router.get("/getunverifiedcouriers", async(req, res) => {
-
-    try {
-        res.type('json')
-        let user_id = req.query.uid
-
-        let auth = req.headers.authorization
-
-        let resultCheckAuth = await sql.checkAuthAdmin(auth, user_id)
-        if (resultCheckAuth.length) {
-            let resultUnverifiedCouriers = await sql.getUnverifiedCouriers(user_id);
-            res.status(200);
-            res.json(resultUnverifiedCouriers);
-        } else {
-            res.sendStatus(401);
-        }
-
-    } catch (error) {
-        res.sendStatus(500);
-        console.log(error)
-    }
-})
-
-//Disabled
-router.get("/getverifiedcouriers", async(req, res) => {
-
-    try {
-        res.type('json')
-        let user_id = req.query.uid
-
-        let auth = req.headers.authorization
-
-        let resultCheckAuth = await sql.checkAuthAdmin(auth, user_id)
-        if (resultCheckAuth.length) {
-            let resultverifiedCouriers = await sql.getVerifiedCouriers(user_id);
-            res.status(200);
-            res.json(resultverifiedCouriers);
-        } else {
-            res.sendStatus(401);
-        }
-
-    } catch (error) {
-        res.sendStatus(500);
-        console.log(error)
-    }
-})
-
-//Disabled
-router.put("/verifycourier", async(req, res) => {
-
-    try {
-        res.type('json')
-        let user_id = req.body.uid
-        let courier_id = req.body.courier_id
-
-        let auth = req.headers.authorization
-
-        let resultCheckAuth = await sql.checkAuthAdmin(auth, user_id)
-
-        if (resultCheckAuth.length) {
-            let resultVerifyCourier = await sql.verifyCourier(user_id, courier_id);
-            if (resultVerifyCourier && resultVerifyCourier.affectedRows) {
-                res.sendStatus(200);
-            } else {
-                res.sendStatus(401);
-            }
-        } else { // If three are none uid of fid
-            res.sendStatus(401);
-        }
-    } catch (error) {
-        res.sendStatus(500);
-        console.log(error)
-    }
-})
 
 
 module.exports = router;

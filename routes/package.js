@@ -5,6 +5,9 @@ const AWS = require('aws-sdk');
 const fs = require("fs")
 const { v4: uuidv4 } = require('uuid');
 const { route } = require("./system");
+const multer = require('multer')
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage });
 
 
 const router = express.Router();
@@ -16,7 +19,6 @@ const s3 = new AWS.S3({
         profile: process.env.AWS_BUCKET_NAME
     })
 })
-
 
 
 
@@ -86,7 +88,7 @@ Query:
 -package_id
 
 Out 1 (200):
-    {
+{
 	"result": {
 		"pid": 10,
 		"cid": 69,
@@ -107,6 +109,7 @@ Out 1 (200):
 		"s_city": "",
 		"d_city": ""
 	}
+}
 
 Out 2 (404):
     {
@@ -219,26 +222,28 @@ Out2 (403):
 }
 
 */
-router.post("/addcustomerpackage", decodeAWT, async(req, res) => {
+router.post("/addcustomerpackage", upload.any(), decodeAWT, async(req, res) => {
 
     try {
         res.type('json')
 
         let user_id = req.decoded.user_id
-        let length = req.body.length
-        let width = req.body.width
-        let height = req.body.height
-        let weight = req.body.weight
-        let type = req.body.type
-        let s_long = req.body.s_long
-        let s_lat = req.body.s_lat
-        let d_long = req.body.d_long
-        let d_lat = req.body.d_lat
-        let receiver_email = req.body.receiver_email
-        let s_city = req.body.s_city
-        let d_city = req.body.d_city
-        let image_raw = Buffer.from(req.body.image_raw, 'base64');
-        let resultAddPackage = await package_sql.addPackageToCustomer(user_id, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiver_email, s_city, d_city);
+        let length = req.headers.length
+        let width = req.headers.width
+        let height = req.headers.height
+        let weight = req.headers.weight
+        let type = req.headers.type
+        let s_long = req.headers.s_long
+        let s_lat = req.headers.s_lat
+        let d_long = req.headers.d_long
+        let d_lat = req.headers.d_lat
+        let receiver_email = req.headers.receiver_email
+        let s_city = req.headers.s_city
+        let d_city = req.headers.d_city
+        let receiver_fullname = req.headers.receiver_fullname
+
+
+        let resultAddPackage = await package_sql.addPackageToCustomer(user_id, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiver_email, s_city, d_city, receiver_fullname);
 
         if (resultAddPackage && resultAddPackage.affectedRows) {
 
@@ -246,7 +251,7 @@ router.post("/addcustomerpackage", decodeAWT, async(req, res) => {
             await s3.upload({
                 Bucket: process.env.AWS_BUCKET_NAME,
                 Key: fileKey,
-                Body: image_raw,
+                Body: req.files[0].buffer,
                 // ContentEncoding: 'image/png',
                 // ContentEncoding: 'base64',
             }).promise()
@@ -361,12 +366,15 @@ router.get("/packageproof", decodeAWT, async(req, res) => {
                 error: 'Proof image could not found.'
             });
         }
+
         let raw_image;
         try {
+
+
             raw_image = await s3.getObject({
 
                 Bucket: process.env.AWS_BUCKET_NAME,
-                Key: image_uuid
+                Key: image_uuid,
             }).promise();
 
 
@@ -380,11 +388,9 @@ router.get("/packageproof", decodeAWT, async(req, res) => {
 
         }
 
-        let base64_image = raw_image.Body.toString('base64')
 
-        res.status(200).json({
-            result: base64_image
-        });
+        res.set('Content-Type', 'image/png')
+        res.status(200).send(raw_image.Body);
 
 
     } catch (error) {

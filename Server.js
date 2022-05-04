@@ -9,11 +9,12 @@ const randomCoordinates = require('random-coordinates');
 const morgan = require('morgan')
 require('dotenv').config()
 
-
 const systemRoute = require("./routes/system");
 const userRoute = require("./routes/user");
 const packageRoute = require("./routes/package")
 const transportRoute = require("./routes/transport");
+const adminRoute = require("./routes/admin");
+
 
 const swaggerDocument = YAML.load('./swagger.yaml');
 
@@ -25,8 +26,9 @@ app.use(cors());
 
 
 
-app.use("/system", systemRoute);
+app.use("/system", systemRoute); //For creating inserting, deleting tables, data.
 app.use("/user", userRoute);
+app.use("/admin", adminRoute);
 app.use("/package", packageRoute);
 app.use("/transport", transportRoute);
 
@@ -39,7 +41,6 @@ app.use("/test", async(req, res) => {
     })
 
 })
-
 
 
 

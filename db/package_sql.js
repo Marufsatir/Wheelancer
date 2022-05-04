@@ -67,7 +67,6 @@ package.listMyPackages = (user_id) => {
 }
 
 
-
 package.checkCourierPackage = (courier_id, pid) => {
 
     return new Promise((resolve, reject) => {
@@ -93,10 +92,10 @@ package.addPackageProof = (pid, type, image) => {
     })
 }
 
-package.addPackageToCustomer = (cid, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiverEmail, s_city, d_city) => {
+package.addPackageToCustomer = (cid, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiverEmail, s_city, d_city, receiver_fullname) => {
 
     return new Promise((resolve, reject) => {
-        pool.query("INSERT INTO Package(cid,transport_id,length,width,height,weight,type,s_long,s_lat,d_long,d_lat,receiver_email,estimated_delivery_date,chat_channel_id,s_city, d_city) VALUES(?,NULL,?,?,?,?,?,?,?,?,?,?,NULL,NULL,?, ?)", [cid, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiverEmail, s_city, d_city], (err, results) => {
+        pool.query("INSERT INTO Package(cid,transport_id,length,width,height,weight,type,s_long,s_lat,d_long,d_lat,receiver_email,estimated_delivery_date,chat_channel_id,s_city, d_city, receiver_fullname) VALUES(?,NULL,?,?,?,?,?,?,?,?,?,?,NULL,NULL,?, ?)", [cid, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiverEmail, s_city, d_city, receiver_fullname], (err, results) => {
             if (err && err.code != "ER_DUP_ENTRY") {
                 return reject(err);
             }

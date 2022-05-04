@@ -4,9 +4,6 @@ const sql_system = require("../db/system_sql");
 const router = express.Router();
 
 
-
-
-
 //Disabled
 router.post("/inserttuples", async(req, res) => {
 

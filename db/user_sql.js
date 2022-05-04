@@ -71,6 +71,20 @@ user.addVehicle = (userID, model, brand, max_length, max_width, max_height, max_
     })
 }
 
+user.getVehicles = (user_id) => {
+    return new Promise((resolve, reject) => {
+
+        pool.query("SELECT * FROM Vehicle WHERE user_id = ?", [user_id], (err, results) => {
+
+            if (err && err.code != "ER_DUP_ENTRY") {
+
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
 user.setTryTimer = (user_id, mode) => {
 
     let query;
@@ -85,6 +99,30 @@ user.setTryTimer = (user_id, mode) => {
     return new Promise((resolve, reject) => {
 
         pool.query(query, [user_id], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+user.addDocument = (user_id, document) => {
+    return new Promise((resolve, reject) => {
+
+        pool.query("INSERT INTO Document(user_id,document) VALUES(?,?)" [userID, document], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+user.getMyDocument = (user_id) => {
+    return new Promise((resolve, reject) => {
+
+        pool.query("SELECT * FROM Document WHERE user_id = ?", [user_id], (err, results) => {
             if (err && err.code != "ER_DUP_ENTRY") {
                 return reject(err);
             }
@@ -334,6 +372,7 @@ user.checkAuth = (authCode) => {
 }
 
 
+//Disabled
 user.getUserInfo = (user_id) => {
     return new Promise((resolve, reject) => {
 
