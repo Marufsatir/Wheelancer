@@ -1,19 +1,19 @@
-_id: req_5a6acb6df560464da3780807c3b4ba12
+_id: req_59f8cc38f9b043768e336722dfa8ac22
 type: Request
 parentId: fld_64db6e1c810146cbabd86d9fd3ce1d4e
-modified: 1651773622744
-created: 1651702772183
-url: http://wheelancer.hopto.org:3013/transport/addoffer
-name: Add Offer (Courier)
+modified: 1651773617725
+created: 1651770342976
+url: http://wheelancer.hopto.org:3013/transport/acceptoffer
+name: Accept Offer (Customer)
 description: ""
 method: POST
 body:
   mimeType: application/json
   text: |-
     {
-    	"package_id": 17,
-    	"transport_id": 1,
-    	"price": 39.880328
+    	"package_id": 23,
+    	"transport_id": 3,
+    	"courier_id": 70
     }
 parameters: []
 headers:
@@ -22,8 +22,8 @@ headers:
     id: pair_f011d119cd694a10a242be74e6031ac0
 authentication:
   type: bearer
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNjg2NzIzLCJleHAiOjE2NTIyOTE1MjN9.zOyjhvx-vRJVjdmk1ksL3MP-GMG3wSv5WoVRMYgVnBs
-metaSortKey: -1651508997004.5312
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNzcyNTE1LCJleHAiOjE2NTIzNzczMTV9.Qa2Z3zNZNS-GDg97RPd1Sna5jaSYyb05Qio87Lh0b7Y
+metaSortKey: -1651508997004.1406
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true

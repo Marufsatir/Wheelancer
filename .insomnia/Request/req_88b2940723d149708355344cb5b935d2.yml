@@ -1,9 +1,9 @@
 _id: req_88b2940723d149708355344cb5b935d2
 type: Request
 parentId: fld_64db6e1c810146cbabd86d9fd3ce1d4e
-modified: 1651718066811
+modified: 1651773591984
 created: 1651717750606
-url: http://wheelancer.hopto.org:3013/transport/removeoffer
+url: http://wheelancer.hopto.org:3013/transport/canceloffer
 name: Cancel Offer (Courier & Customer)
 description: ""
 method: DELETE
@@ -11,16 +11,20 @@ body: {}
 parameters:
   - id: pair_75c2903d75fa4fe8bb56c73090594b10
     name: package_id
-    value: "8"
+    value: "17"
     description: ""
   - id: pair_e5ef98f7b48e41a7979b890ddfa4cada
     name: courier_id
     value: "70"
     description: ""
+  - id: pair_f22d55eb51604e0b84dce97d60cbc16e
+    name: transport_id
+    value: "1"
+    description: ""
 headers: []
 authentication:
   type: bearer
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2OSwidHlwZSI6MCwiaWF0IjoxNjUxNjk1NDY3LCJleHAiOjE2NTIzMDAyNjd9.5p-8MSlAnmRyGqlINu3UABHk3peHYnjb_nHqRIdYGMc
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNzcyNTE1LCJleHAiOjE2NTIzNzczMTV9.Qa2Z3zNZNS-GDg97RPd1Sna5jaSYyb05Qio87Lh0b7Y
 metaSortKey: -1651508996912.1484
 isPrivate: false
 settingStoreCookies: true
