@@ -57,10 +57,38 @@ user.addCustomer = (user_id) => {
 }
 
 
-user.addVehicle = (userID, model, brand, max_length, max_width, max_height, max_weight, horsepower, registration_plate) => {
+user.addVehicle = (userID, model, brand, max_length, max_width, max_height, max_weight, horsepower, registration_plate, vehicle_type) => {
     return new Promise((resolve, reject) => {
 
-        pool.query("INSERT INTO Vehicle(user_id,model,brand,max_length,max_width,max_height,max_weight,horsepower,registration_plate) VALUES(?,?,?,?,?,?,?,?,?)", [userID, model, brand, max_length, max_width, max_height, max_weight, horsepower, registration_plate], (err, results) => {
+        pool.query("INSERT INTO Vehicle(user_id,model,brand,max_length,max_width,max_height,max_weight,horsepower,registration_plate, type) VALUES(?,?,?,?,?,?,?,?,?, ?)", [userID, model, brand, max_length, max_width, max_height, max_weight, horsepower, registration_plate, vehicle_type], (err, results) => {
+
+            if (err && err.code != "ER_DUP_ENTRY") {
+
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+user.getVehicleFromTransport = (user_id, transport_id) => {
+    return new Promise((resolve, reject) => {
+
+        pool.query("SELECT * FROM Vehicle v JOIN Transportation t ON (v.vehicle_id = t.vehicle_id) WHERE user_id = ? AND t.transport_id = ?", [user_id, transport_id], (err, results) => {
+
+            if (err && err.code != "ER_DUP_ENTRY") {
+
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+user.getVehicle = (user_id, vehicle_id) => {
+    return new Promise((resolve, reject) => {
+
+        pool.query("SELECT * FROM Vehicle WHERE user_id = ?", [user_id], (err, results) => {
 
             if (err && err.code != "ER_DUP_ENTRY") {
 
@@ -110,7 +138,7 @@ user.setTryTimer = (user_id, mode) => {
 user.addDocument = (user_id, document) => {
     return new Promise((resolve, reject) => {
 
-        pool.query("INSERT INTO Document(user_id,document) VALUES(?,?)" [userID, document], (err, results) => {
+        pool.query("INSERT INTO Document(user_id,document) VALUES(?,?)", [user_id, document], (err, results) => {
             if (err && err.code != "ER_DUP_ENTRY") {
                 return reject(err);
             }
@@ -146,7 +174,7 @@ user.verifyCourier = (user_id, courier_id) => {
 user.getUnverifiedCouriers = () => {
     return new Promise((resolve, reject) => {
 
-        pool.query("SELECT user_id, user_name, name, email, biography FROM Courier a JOIN User u USING(user_id) WHERE is_verified = 0", (err, results) => {
+        pool.query("SELECT * FROM Courier c JOIN User u USING(user_id) WHERE is_verified = 0", (err, results) => {
             if (err) {
 
                 return reject(err);
@@ -217,10 +245,10 @@ user.setPassword = (user_id, password) => {
     })
 }
 
-user.deposit = (user_id, amount) => {
+user.updateBalance = (user_id, amount) => {
     return new Promise((resolve, reject) => {
 
-        pool.query("UPDATE User SET balance = ? WHERE user_id = ?", [amount, user_id], (err, results) => {
+        pool.query("UPDATE User SET balance = balance + ? WHERE user_id = ?", [amount, user_id], (err, results) => {
             if (err && err.code != "ER_DUP_ENTRY") {
                 return reject(err);
             }
@@ -371,8 +399,6 @@ user.checkAuth = (authCode) => {
     })
 }
 
-
-//Disabled
 user.getUserInfo = (user_id) => {
     return new Promise((resolve, reject) => {
 

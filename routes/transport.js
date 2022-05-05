@@ -11,7 +11,8 @@ const multer = require('multer')
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage });
 const geolib = require('geolib');
-
+const BinPacking3D = require('binpackingjs').BP3D;
+const { Item, Bin, Packer } = BinPacking3D;
 
 const s3 = new AWS.S3({
     region: process.env.AWS_BUCKET_REGION,
@@ -29,6 +30,7 @@ router.get("/nearpackages", decodeAWT, async(req, res) => {
     try {
         res.type('json')
 
+        let user_id = req.decoded.user_id
         let s_city = req.query.s_city
         let curr_pos_long = req.query.curr_pos_long
         let curr_pos_lat = req.query.curr_pos_lat
@@ -39,8 +41,6 @@ router.get("/nearpackages", decodeAWT, async(req, res) => {
                 error: 'You do not have permission to perform this.'
             })
         }
-
-
         let resultAllPackages = await transport_sql.getAllPackagesInCity(s_city);
         let filteredPackages = resultAllPackages.filter((item) => {
 
@@ -70,33 +70,33 @@ router.get("/nearpackages", decodeAWT, async(req, res) => {
     }
 })
 
-//Disabled
-router.get("/alltransports", async(req, res) => {
+// Gets all offers detailed for couriers, minimal for customers
+router.get("/showoffers", decodeAWT, async(req, res) => {
 
     try {
         res.type('json')
-        let user_id = req.query.uid
-        let auth = req.headers.authorization
 
-        let resultCheckAuth = await user_sql.checkAuth(auth)
+        let user_id = req.decoded.user_id
 
-        if (resultCheckAuth.length) {
-            let resultAllTransports = await transport_sql.listAllTransports();
-            if (resultAllTransports && resultAllTransports.length) {
-
-                resultAllTransports.forEach((item) => {
-                    //item.status = "aaa"
-                });
-
-                res.json(resultAllTransports);
-                res.status(200);
-            } else {
-
-                res.status(200);
-                res.json([])
-            }
+        let resultOffer;
+        if (req.decoded.type == 0) {
+            resultOffer = await transport_sql.getCustomerOffers(user_id);
         } else {
-            res.sendStatus(401);
+
+            resultOffer = await transport_sql.getCourierOffers(user_id);
+        }
+
+        if (resultOffer && resultOffer.length) {
+
+            res.status(200).json({
+                result: resultOffer
+            })
+        } else {
+
+            res.status(200);
+            res.json({
+                result: []
+            })
         }
     } catch (error) {
         res.sendStatus(500);
@@ -104,30 +104,263 @@ router.get("/alltransports", async(req, res) => {
     }
 })
 
-//Disabled
-router.get("/mytransports", async(req, res) => {
+// Gets a single offer for customer.
+router.get("/showoffer", decodeAWT, async(req, res) => {
 
     try {
         res.type('json')
-        let user_id = req.query.uid
-        let auth = req.headers.authorization
 
-        let resultCheckAuth = await user_sql.checkAuthType(auth, user_id)
+        let user_id = req.decoded.user_id
+        let offer_id = req.query.offer_id;
 
-        if (resultCheckAuth.length) {
-            let resultMyTransports = await transport_sql.listMyTransports(user_id);
-            if (resultMyTransports && resultMyTransports.length) {
 
-                res.json(resultMyTransports);
-                res.status(200);
-            } else {
+        if (req.decoded.type == 1) {
+            return res.status(401).json({
+                error: 'You do not have permission to perform this.'
+            })
+        }
 
-                res.status(200);
-                res.json([])
+        resultOffer = await transport_sql.getCustomerOffers(user_id);
+
+
+
+        if (resultOffer && resultOffer.length) {
+
+            res.status(200).json({
+                result: resultOffer
+            })
+        } else {
+
+            res.status(200);
+            res.json({
+                result: []
+            })
+        }
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+})
+
+
+// Remove offer if status = CREATED, NEGOTIATED for courier |  status = CREATED for customer
+router.delete("/removeoffer", decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+        let courier_id = req.decoded.type == 0 ? req.query.courier_id : req.decoded.user_id;
+        let package_id = req.query.package_id;
+
+
+        let resultOfferDetails = await transport_sql.getOfferDetails(package_id, courier_id)
+
+        if (!resultOfferDetails.length) {
+            return res.status(404).json({
+                error: 'Offer could not be found.'
+            })
+        }
+
+        let offerStatus = resultOfferDetails[0].status
+        if (req.decoded.type == 0) {
+
+            if (offerStatus != 'CREATED') {
+
+                return res.status(406).json({
+                    error: 'Offer cannot be removed after negotiation.'
+                })
             }
         } else {
-            res.sendStatus(401);
+            if (offerStatus != 'CREATED' && offerStatus != 'NEGOTIATED') {
+
+                return res.status(406).json({
+                    error: 'Offer cannot be removed after picking up.'
+                })
+            }
         }
+        let resultCancel = await transport_sql.cancelOffer(package_id, courier_id);
+
+        if (resultCancel && resultCancel.affectedRows) {
+            res.status(200).json({
+                result: 'Offer has been cancelled.'
+            })
+        } else {
+            res.status(409).json({
+                result: 'Offer could not be cancelled.'
+            })
+
+        }
+
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+})
+
+
+//Courier creates an offer
+router.post("/addoffer", decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+
+        let user_id = req.decoded.user_id
+        let package_id = req.body.package_id;
+        let transport_id = req.body.transport_id;
+        let price = req.body.price;
+
+        if (req.decoded.type != 1) {
+            return res.status(401).json({
+                error: 'User must be courier.'
+            })
+        }
+
+        let resultVehicleFromTransport = await user_sql.getVehicleFromTransport(user_id, transport_id);
+        let resultAllPackagesFromTransport = await package_sql.getPackagesFromUserTransport(transport_id, user_id);
+
+        let currentPackage = await package_sql.getPackage(package_id);
+
+        if (!currentPackage.length) {
+            return res.status(412).json({
+                error: 'Selected package could not found.'
+            });
+        }
+
+
+        let used_weight = 0;
+        let max_weight = parseFloat(resultVehicleFromTransport[0].max_weight);
+        let max_height = parseFloat(resultVehicleFromTransport[0].max_height);
+        let max_width = parseFloat(resultVehicleFromTransport[0].max_width);
+        let max_length = parseFloat(resultVehicleFromTransport[0].max_length);
+
+        let bin = await new Bin('Total Capacity', max_width, max_height, max_length, 0)
+        let packer = await new Packer();
+        await packer.addBin(bin);
+
+
+
+        resultAllPackagesFromTransport.forEach(item => {
+            used_weight += item.weight
+            packer.addItem(new Item(item.pid + '', parseFloat(item.width), parseFloat(item.height), parseFloat(item.length), 0))
+        })
+
+        await packer.addItem(new Item('NEW ITEM', parseFloat(currentPackage[0].width), parseFloat(currentPackage[0].height), parseFloat(currentPackage[0].length), 0))
+        used_weight += currentPackage[0].weight
+        await packer.pack();
+
+        if (packer.unfitItems.length) {
+            return res.status(412).json({
+                error: 'New cargo does not fit your vehicle.'
+            });
+        }
+
+        if (max_weight < used_weight) {
+            return res.status(412).json({
+                error: 'New cargo exceeds maximum weight capacity of your vehicle.'
+            });
+        }
+
+        let resultAddOffer = await transport_sql.addOffer(package_id, user_id, price)
+
+        if (resultAddOffer.affectedRows) {
+            res.status(200).json({
+                result: 'Offer successfully sent.'
+            });
+        } else {
+            res.status(400).json({
+                result: 'Offer could not sent.'
+            });
+        }
+
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+})
+
+
+//Creates a transport
+router.post("/add", decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+
+        let user_id = req.decoded.user_id
+
+        let vehicle_id = req.body.vehicle_id;
+        let courier_pos_long = req.body.courier_pos_long;
+        let courier_pos_lat = req.body.courier_pos_lat;
+        let departure_date = req.body.departure_date;
+        let arrival_date = req.body.arrival_date;
+
+        if (req.decoded.type != 1) {
+            return res.status(401).json({
+                error: 'User must be courier.'
+            })
+        }
+
+        let resultVehicle = await user_sql.getVehicle(user_id, vehicle_id)
+
+        if (!resultVehicle.length) {
+            return res.status(404).json({
+                error: 'Vehicle could not found.'
+            })
+        }
+
+        let remaining_volume = resultVehicle[0].max_length * resultVehicle[0].max_width * resultVehicle[0].max_height
+        let resultCourierTransports = await transport_sql.addTransport(user_id, vehicle_id, courier_pos_long, courier_pos_lat, new Date(), remaining_volume, resultVehicle[0].max_weight, departure_date, arrival_date, 'CREATED')
+
+        if (resultCourierTransports.affectedRows) {
+
+            res.status(200).json({
+                result: 'Transport successfully added.'
+            });
+        } else {
+
+            res.status(200).json({
+                result: 'Transport could not added.'
+            });
+        }
+
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+})
+
+//Gets Courier's all transports
+router.get("/getcouriertransports", decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+
+        let user_id = req.decoded.user_id
+
+        if (req.decoded.type != 1) {
+            return res.status(401).json({
+                error: 'User must be courier.'
+            })
+        }
+
+        let resultCourierTransports = await transport_sql.getCourierTransports(user_id)
+
+        if (resultCourierTransports.length) {
+
+            res.json({
+                result: resultCourierTransports
+            });
+            res.status(200);
+        } else {
+
+            res.status(200);
+            res.json({
+                result: []
+            })
+        }
+
     } catch (error) {
         res.sendStatus(500);
         console.log(error)

@@ -42,7 +42,32 @@ package.listPackageProofs = (type, user_id, package_id) => {
     })
 }
 
-package.getPackage = (user_id, package_id) => {
+
+package.getPackagesFromUserTransport = (transport_id, user_id) => {
+
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT p.* FROM Transportation t JOIN Package p  ON (t.transport_id = p.transport_id) JOIN Vehicle v ON (t.vehicle_id = v.vehicle_id) WHERE t.transport_id = ? AND courier_id = ?", [transport_id, user_id], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+package.getPackage = (package_id) => {
+
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT * FROM Package WHERE pid = ?", [package_id], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+package.getPackageFromUser = (user_id, package_id) => {
 
     return new Promise((resolve, reject) => {
         pool.query("SELECT * FROM Package WHERE cid = ? AND pid = ?", [user_id, package_id], (err, results) => {
@@ -95,7 +120,7 @@ package.addPackageProof = (pid, type, image) => {
 package.addPackageToCustomer = (cid, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiverEmail, s_city, d_city, receiver_fullname) => {
 
     return new Promise((resolve, reject) => {
-        pool.query("INSERT INTO Package(cid,transport_id,length,width,height,weight,type,s_long,s_lat,d_long,d_lat,receiver_email,estimated_delivery_date,chat_channel_id,s_city, d_city, receiver_fullname) VALUES(?,NULL,?,?,?,?,?,?,?,?,?,?,NULL,NULL,?, ?)", [cid, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiverEmail, s_city, d_city, receiver_fullname], (err, results) => {
+        pool.query("INSERT INTO Package(cid,transport_id,length,width,height,weight,type,s_long,s_lat,d_long,d_lat,receiver_email,estimated_delivery_date,chat_channel_id,s_city, d_city, receiver_fullname) VALUES(?,NULL,?,?,?,?,?,?,?,?,?,?,NULL,NULL,?, ?, ?)", [cid, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiverEmail, s_city, d_city, receiver_fullname], (err, results) => {
             if (err && err.code != "ER_DUP_ENTRY") {
                 return reject(err);
             }

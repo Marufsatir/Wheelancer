@@ -58,7 +58,7 @@ router.get("/customerpackage", decodeAWT, async(req, res) => {
         let user_id = req.decoded.user_id
         let package_id = req.query.package_id
 
-        let resultPackage = await package_sql.getPackage(user_id, package_id);
+        let resultPackage = await package_sql.getPackageFromUser(user_id, package_id);
         if (resultPackage && resultPackage.length) {
 
             res.status(200).json({
@@ -294,12 +294,10 @@ router.delete("/customerpackage", decodeAWT, async(req, res) => {
         res.type('json')
 
         let user_id = req.decoded.user_id
-        let package_id = req.body.package_id
+        let package_id = req.query.package_id
 
 
-        let resultGetPackage = await package_sql.getPackage(user_id, package_id);
-
-        console.log(resultGetPackage);
+        let resultGetPackage = await package_sql.getPackageFromUser(user_id, package_id);
         if (!resultGetPackage.length) {
 
             res.status(404);
