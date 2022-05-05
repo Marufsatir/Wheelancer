@@ -143,17 +143,80 @@ router.get("/showoffer", decodeAWT, async(req, res) => {
 })
 
 
+// Gets a single offer for customer.
+router.post("/acceptoffer", decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+        let user_id = req.decoded.user_id
+        let package_id = req.body.package_id
+        let transport_id = req.body.transport_id;
+        let courier_id = req.body.courier_id;
+
+
+        if (req.decoded.type == 1) {
+            return res.status(401).json({
+                error: 'You do not have permission to perform this.'
+            })
+        }
+
+        let resultMyPackage = await package_sql.getPackageFromUser(user_id, package_id)
+
+        if (!resultMyPackage.length) {
+            return res.status(401).json({
+                error: 'You do not own this package.'
+            })
+        }
+
+        let resultGetOffer = await transport_sql.getOfferDetails(package_id, courier_id, transport_id)
+
+        if (!resultGetOffer.length) {
+            return res.status(401).json({
+                error: 'Courier did not send offer for this package.'
+            })
+        }
+
+        if (resultMyPackage[0].transport_id || resultMyPackage[0].status != 'CREATED') {
+            return res.status(401).json({
+                error: 'You already have accepted an offer for this package.'
+            })
+        }
+
+        //Set package NEGOTIATED
+        let resultUpdatePackageStatus = await package_sql.updatePackageStatus(package_id, 'NEGOTIATED');
+        let resultUpdatePackageTransportation = await package_sql.updatePackageTransportation(package_id, transport_id);
+        if (resultUpdatePackageStatus.affectedRows && resultUpdatePackageTransportation.affectedRows) {
+
+            res.status(200).json({
+                result: 'Offer accepted.'
+            })
+        } else {
+
+            res.status(407);
+            res.json({
+                error: 'Offer could not be accepted.'
+            })
+        }
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+})
+
+
 // Remove offer if status = CREATED, NEGOTIATED for courier |  status = CREATED for customer
-router.delete("/removeoffer", decodeAWT, async(req, res) => {
+router.delete("/canceloffer", decodeAWT, async(req, res) => {
 
     try {
         res.type('json')
 
         let courier_id = req.decoded.type == 0 ? req.query.courier_id : req.decoded.user_id;
         let package_id = req.query.package_id;
+        let transport_id = req.query.transport_id;
 
 
-        let resultOfferDetails = await transport_sql.getOfferDetails(package_id, courier_id)
+        let resultOfferDetails = await transport_sql.getOfferDetails(package_id, courier_id, transport_id)
 
         if (!resultOfferDetails.length) {
             return res.status(404).json({
@@ -178,19 +241,92 @@ router.delete("/removeoffer", decodeAWT, async(req, res) => {
                 })
             }
         }
-        let resultCancel = await transport_sql.cancelOffer(package_id, courier_id);
 
-        if (resultCancel && resultCancel.affectedRows) {
-            res.status(200).json({
-                result: 'Offer has been cancelled.'
-            })
+        let resultUpdatePackageStatus = await package_sql.updatePackageStatus(package_id, 'CREATED');
+        let resultUpdatePackageTransportation = await package_sql.updatePackageTransportation(package_id, null);
+
+
+        if (resultUpdatePackageStatus.affectedRows && resultUpdatePackageTransportation.affectedRows) {
+
+            let resultCancel = await transport_sql.cancelOffer(package_id, courier_id, transport_id);
+
+            if (resultCancel && resultCancel.affectedRows) {
+                res.status(200).json({
+                    result: 'Offer has been cancelled.'
+                })
+            } else {
+                res.status(409).json({
+                    result: 'Offer could not be cancelled.'
+                })
+
+            }
         } else {
-            res.status(409).json({
-                result: 'Offer could not be cancelled.'
-            })
 
+            res.status(409).json({
+                result: 'Package details could not be altered.'
+            })
         }
 
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+})
+
+// Picking up package for courier.
+router.post("/pickupcargo", decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+        let user_id = req.decoded.user_id
+        let package_id = req.body.package_id
+
+
+        if (req.decoded.type == 0) {
+            return res.status(401).json({
+                error: 'You do not have permission to perform this.'
+            })
+        }
+
+        let resultMyPackage = await package_sql.checkCourierPackage(user_id, package_id)
+
+        if (!resultMyPackage.length) {
+            return res.status(401).json({
+                error: 'You do not have permission to pickup this package.'
+            })
+        }
+
+        if (resultMyPackage[0].status != 'NEGOTIATED') {
+            return res.status(401).json({
+                error: 'This package cannot be picked up at the moment.'
+            })
+        }
+
+        //Set package PICKEDUP
+        let resultUpdatePackageStatus = await package_sql.updatePackageStatus(package_id, 'PICKEDUP');
+
+
+        //Remove rest of the offers.
+
+        await transport_sql.removeUnwantedOffersExceptGiven(package_id, user_id, resultMyPackage[0].transport_id)
+
+        let packageTotalVolume = resultMyPackage[0].width * resultMyPackage[0].length * resultMyPackage[0].height
+
+        await transport_sql.decreaseRemainingValue(resultMyPackage[0].transport_id, packageTotalVolume, resultMyPackage[0].weight)
+
+        if (resultUpdatePackageStatus.affectedRows) {
+
+            res.status(200).json({
+                result: 'Package successfully picked up.'
+            })
+        } else {
+
+            res.status(407);
+            res.json({
+                error: 'Package could not be picked up.'
+            })
+        }
     } catch (error) {
         res.sendStatus(500);
         console.log(error)
@@ -261,7 +397,7 @@ router.post("/addoffer", decodeAWT, async(req, res) => {
             });
         }
 
-        let resultAddOffer = await transport_sql.addOffer(package_id, user_id, price)
+        let resultAddOffer = await transport_sql.addOffer(package_id, user_id, transport_id, price)
 
         if (resultAddOffer.affectedRows) {
             res.status(200).json({

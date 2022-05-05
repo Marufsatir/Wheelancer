@@ -55,6 +55,18 @@ package.getPackagesFromUserTransport = (transport_id, user_id) => {
     })
 }
 
+package.getPackagesFromCourierTransport = (transport_id, courier_id) => {
+
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT p.*, t.remaining_weight , t.remaining_volume, t.status as trasportation_status FROM Package p JOIN Transportation t ON (p.transport_id = t.transport_id) WHERE t.transport_id = ? AND t.courier_id = ?", [transport_id, courier_id], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
 package.getPackage = (package_id) => {
 
     return new Promise((resolve, reject) => {
@@ -65,6 +77,34 @@ package.getPackage = (package_id) => {
             return resolve(results);
         })
     })
+}
+
+
+
+package.updatePackageTransportation = (pid, transport_id) => {
+
+    return new Promise((resolve, reject) => {
+        pool.query("UPDATE Package set transport_id = ? WHERE pid = ?;", [transport_id, pid], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+
+}
+
+package.updatePackageStatus = (pid, status) => {
+
+    return new Promise((resolve, reject) => {
+        pool.query("UPDATE Package set status = ? WHERE pid = ?;", [status, pid], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+
 }
 
 package.getPackageFromUser = (user_id, package_id) => {

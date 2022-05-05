@@ -20,6 +20,40 @@ const s3 = new AWS.S3({
     })
 })
 
+// Gets courier's own packages return all of them
+router.get("/couriertransportpackages", decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+        let user_id = req.decoded.user_id
+        let transport_id = req.query.transport_id
+
+        if (req.decoded.type != 1) {
+            return res.status(401).json({
+                error: 'User must be courier.'
+            })
+        }
+
+        let resultPackagesFromCourierTransport = await package_sql.getPackagesFromCourierTransport(transport_id, user_id);
+        if (resultPackagesFromCourierTransport && resultPackagesFromCourierTransport.length) {
+
+            res.status(200).json({
+                result: resultPackagesFromCourierTransport
+            })
+        } else {
+
+            res.status(200);
+            res.json({
+                result: []
+            })
+        }
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+})
+
 
 
 // Gets customer's own packages return all of them
@@ -29,6 +63,12 @@ router.get("/customerpackages", decodeAWT, async(req, res) => {
         res.type('json')
 
         let user_id = req.decoded.user_id
+
+        if (req.decoded.type != 0) {
+            return res.status(401).json({
+                error: 'User must be customer.'
+            })
+        }
 
         let resultMyPackages = await package_sql.listMyPackages(user_id);
         if (resultMyPackages && resultMyPackages.length) {
@@ -57,6 +97,12 @@ router.get("/customerpackage", decodeAWT, async(req, res) => {
 
         let user_id = req.decoded.user_id
         let package_id = req.query.package_id
+
+        if (req.decoded.type != 0) {
+            return res.status(401).json({
+                error: 'User must be customer.'
+            })
+        }
 
         let resultPackage = await package_sql.getPackageFromUser(user_id, package_id);
         if (resultPackage && resultPackage.length) {
