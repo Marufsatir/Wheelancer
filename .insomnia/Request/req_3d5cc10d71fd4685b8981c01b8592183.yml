@@ -1,0 +1,31 @@
+_id: req_3d5cc10d71fd4685b8981c01b8592183
+type: Request
+parentId: fld_64db6e1c810146cbabd86d9fd3ce1d4e
+modified: 1651775684148
+created: 1651774674112
+url: http://wheelancer.hopto.org:3013/transport/pickupcargo
+name: Pickup Package (Courier)
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"package_id": 32
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_f011d119cd694a10a242be74e6031ac0
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNzcyNTE1LCJleHAiOjE2NTIzNzczMTV9.Qa2Z3zNZNS-GDg97RPd1Sna5jaSYyb05Qio87Lh0b7Y
+metaSortKey: -1651508996907.6074
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
