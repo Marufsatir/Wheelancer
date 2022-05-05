@@ -62,3 +62,7 @@
 "SELECT * FROM Document d LEFT JOIN Package p ON (p.pid = pp.pid) LEFT JOIN Transportation t ON (p.transport_id = t.transport_id) WHERE p.cid = ? OR t.courier_id = ?", [cid]
 
 "SELECT * FROM Document WHERE user_id = ?", [userID]
+
+-- Add Package to a Transportation
+"UPDATE Transportation t, Package p SET t.remaining_weight = t.remaining_weight - p.weight, t.remaining_volume = t.remaining_volume - (p.length * p.width * p.height),
+p.status = 'NEGOTIATED', p.estimated_delivery_date = t.arrival_date, p.transport_id = t.transport_id WHERE t.transport_id = ? AND p.pid = ?", [transport_id,pid]

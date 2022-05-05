@@ -88,9 +88,9 @@ CREATE TABLE IF NOT EXISTS Transportation (
 	courier_pos_lat DECIMAL(10,6) NOT NULL,
 	last_update_date DECIMAL(10,6) NOT NULL,
 	remaining_weight DECIMAL(6,3) NOT NULL,
-	remaining_volume DECIMAL(6,3) NOT NULL,
-	departure_date DATE,
-	arrival_date DATE,
+	remaining_volume DECIMAL(18,3) NOT NULL,
+	departure_date DATETIME,
+	arrival_date DATETIME,
 	status ENUM('CREATED','ONGOING','FINISHED') NOT NULL DEFAULT 'CREATED',
 	FOREIGN KEY(courier_id) REFERENCES Courier(user_id) ON DELETE CASCADE,
 	FOREIGN KEY(vehicle_id) REFERENCES Vehicle(vehicle_id) ON DELETE CASCADE
