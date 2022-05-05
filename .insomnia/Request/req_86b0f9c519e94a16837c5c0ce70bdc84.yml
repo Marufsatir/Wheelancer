@@ -1,0 +1,27 @@
+_id: req_86b0f9c519e94a16837c5c0ce70bdc84
+type: Request
+parentId: fld_dcf9fc54692445cf933042e6a11b18f2
+modified: 1651765249943
+created: 1651765125907
+url: http://wheelancer.hopto.org:3013/package/courierpackages
+name: Get Courier's All Packages
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_0db2f7c22e0046108082155dab7ebecf
+    name: transport_id
+    value: "4"
+    description: ""
+headers: []
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNzY1MTk2LCJleHAiOjE2NTIzNjk5OTZ9.vAv34hh4dOxtfkCIwf8S1dsJOIuxW3-FjkfPgEJu1_c
+metaSortKey: -1651508996900.625
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
