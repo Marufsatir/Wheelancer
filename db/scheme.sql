@@ -34,12 +34,14 @@ CREATE TABLE IF NOT EXISTS Customer (
 CREATE TABLE IF NOT EXISTS Feedback (
 	courier_id INT(10) NOT NULL,
 	customer_id INT(10) NOT NULL,
+	pid INT(10) NOT NULL,
 	message VARCHAR(255),
 	rate DECIMAL(3,2) NOT NULL,
 	date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-	PRIMARY KEY(courier_id, customer_id),
+	PRIMARY KEY(courier_id, customer_id, pid),
 	FOREIGN KEY(courier_id) REFERENCES Courier(user_id) ON DELETE CASCADE,
-	FOREIGN KEY(customer_id) REFERENCES Customer(user_id) ON DELETE CASCADE
+	FOREIGN KEY(customer_id) REFERENCES Customer(user_id) ON DELETE CASCADE,
+	FOREIGN KEY(pid) REFERENCES Package(pid) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Badge (
@@ -74,6 +76,7 @@ CREATE TABLE IF NOT EXISTS Vehicle (
 	max_weight DECIMAL(6,3) NOT NULL,
 	horsepower INT(10) NOT NULL,
 	registration_plate VARCHAR(16) NOT NULL UNIQUE,
+	type ENUM('Car','Truck','Motorcycle') NOT NULL,
 	FOREIGN KEY(user_id) REFERENCES Courier(user_id) ON DELETE CASCADE
 );
 
@@ -84,13 +87,11 @@ CREATE TABLE IF NOT EXISTS Transportation (
 	courier_pos_long DECIMAL(10,6) NOT NULL,
 	courier_pos_lat DECIMAL(10,6) NOT NULL,
 	last_update_date DECIMAL(10,6) NOT NULL,
-	remaining_length DECIMAL(6,3) NOT NULL,
-	remaining_width DECIMAL(6,3) NOT NULL,
-	remaining_height DECIMAL(6,3) NOT NULL,
 	remaining_weight DECIMAL(6,3) NOT NULL,
+	remaining_volume DECIMAL(6,3) NOT NULL,
 	departure_date DATE,
 	arrival_date DATE,
-	status VARCHAR(16) NOT NULL,
+	status ENUM('CREATED','ONGOING','FINISHED') NOT NULL DEFAULT 'CREATED',
 	FOREIGN KEY(courier_id) REFERENCES Courier(user_id) ON DELETE CASCADE,
 	FOREIGN KEY(vehicle_id) REFERENCES Vehicle(vehicle_id) ON DELETE CASCADE
 );
@@ -109,7 +110,7 @@ CREATE TABLE IF NOT EXISTS Package (
 	d_long DECIMAL(10,6) NOT NULL,
 	d_lat DECIMAL(10,6) NOT NULL,
 	status ENUM('CREATED','NEGOTIATED','REJECTED','PICKEDUP','DELIVERED','CONFIRMED') NOT NULL DEFAULT 'CREATED',
-	receiver_fullname VARCHAR(20) NOT NULL,
+	receiver_fullname VARCHAR(64) NOT NULL,
 	receiver_email VARCHAR(64) NOT NULL,
 	estimated_delivery_date DATE DEFAULT NULL,
 	chat_channel_id int(10) DEFAULT NULL,

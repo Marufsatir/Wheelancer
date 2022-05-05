@@ -47,7 +47,7 @@
 "SELECT * FROM Vehicle WHERE user_id = ?", [userID]
 
 -- Add Document
-"INSERT INTO Document(user_id,document,type) VALUES(?,?,?)" [userID,document,type]
+"INSERT INTO Document(user_id,document) VALUES(?,?)", [userID,document]
 
 -- View a single proof
 "SELECT * FROM Package_Proofs WHERE proof_id = ?", [proofID]
