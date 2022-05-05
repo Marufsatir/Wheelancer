@@ -1,24 +1,19 @@
-_id: req_929602bc510c4240a69e33682c7f17f7
+_id: req_e74cd9386b96433082531dccfa17bd31
 type: Request
-parentId: fld_dcf9fc54692445cf933042e6a11b18f2
-modified: 1651712955566
-created: 1651509171353
-url: http://wheelancer.hopto.org:3013/package/customerpackages
-name: Get Customer's All Packages
+parentId: fld_64db6e1c810146cbabd86d9fd3ce1d4e
+modified: 1651709335584
+created: 1651709243103
+url: http://wheelancer.hopto.org:3013/transport/showoffers
+name: Get Offers (Courier & Customer)
 description: ""
 method: GET
-body:
-  mimeType: application/json
-  text: ""
+body: {}
 parameters: []
-headers:
-  - name: Content-Type
-    value: application/json
-    id: pair_f011d119cd694a10a242be74e6031ac0
+headers: []
 authentication:
   type: bearer
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2OSwidHlwZSI6MCwiaWF0IjoxNjUxNzA5MzI4LCJleHAiOjE2NTIzMTQxMjh9.c2JC23QVHGLXSQJl6pGXlFPnMgOEC4sPLr0hHPnGY0A
-metaSortKey: -1651508996903.75
+metaSortKey: -1651508996919.7656
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true
