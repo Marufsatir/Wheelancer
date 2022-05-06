@@ -306,35 +306,7 @@ router.get("/packageproof", decodeAWT, async(req, res) => {
 })
 
 
-/*Deletes customer's package from the system.
-body:
-{
-	"package_id": 1
-}
-
-out1 (200):
-{
-    result: 'Package successfully removed from system.'
-}
-
-out 2 (404):
-
-{
-    error: 'Package could not found.'
-}
-out 3 (403):
-
-{
-    error: 'Package could not removed from system.'
-}
-
-out 4 (409):
-
-{
-    error: 'Package has an active transportation process you can not remove it from the system.'
-}
-
-*/
+// Deletes customer's package from the system.
 router.delete("/customerpackage", decodeAWT, async(req, res) => {
 
     try {

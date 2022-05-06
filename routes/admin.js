@@ -15,24 +15,7 @@ const package_sql = require("../db/package_sql")
 const user_sql = require("../db/user_sql");
 
 
-/*
-Gets unverified couriers for admin.
-Only header
-
-
-out (401):
-
-{
-    error: 'You do not have permission to do that.'
-}
-
-out (200):
-
-{
-    result: <SQL(Courier Join User)>
-}
-
-*/
+// Gets unverified couriers for admin.
 router.get("/getunverifiedcouriers", decodeAWT, async(req, res) => {
 
     try {
@@ -57,21 +40,7 @@ router.get("/getunverifiedcouriers", decodeAWT, async(req, res) => {
     }
 })
 
-/*
-Verifies the courier.
-
-
-out (401):
-
-{
-    error: 'You do not have permission to do that.'
-}
-
-out (200):
-
-OK
-
-*/
+// Verifies the courier.
 router.put("/verifycourier", async(req, res) => {
 
     try {
