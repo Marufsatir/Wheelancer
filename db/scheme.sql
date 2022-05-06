@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS User (
 	surname VARCHAR(20) NOT NULL,
 	birthday DATE NOT NULL,
 	id_num VARCHAR(11) UNIQUE NOT NULL,
-	balance INT(8) DEFAULT 0 NOT NULL,
+	balance DECIMAL(10,2) DEFAULT 0 NOT NULL,
 	email VARCHAR(64) NOT NULL UNIQUE,
 	password VARCHAR(64) NOT NULL,
 	email_verified TINYINT DEFAULT 0 NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS Transportation (
 	vehicle_id INT(10) NOT NULL,
 	courier_pos_long DECIMAL(10,6) NOT NULL,
 	courier_pos_lat DECIMAL(10,6) NOT NULL,
-	last_update_date DECIMAL(10,6) NOT NULL,
+	last_update_date DATETIME,
 	remaining_weight DECIMAL(6,3) NOT NULL,
 	remaining_volume DECIMAL(18,3) NOT NULL,
 	departure_date DATETIME,
@@ -109,7 +109,7 @@ CREATE TABLE IF NOT EXISTS Package (
 	s_lat DECIMAL(10,6) NOT NULL,
 	d_long DECIMAL(10,6) NOT NULL,
 	d_lat DECIMAL(10,6) NOT NULL,
-	status ENUM('CREATED','NEGOTIATED','REJECTED','PICKEDUP','DELIVERED','CONFIRMED') NOT NULL DEFAULT 'CREATED',
+	status ENUM('CREATED','NEGOTIATED','PICKEDUP','DELIVERED','CONFIRMED') NOT NULL DEFAULT 'CREATED',
 	receiver_fullname VARCHAR(64) NOT NULL,
 	receiver_email VARCHAR(64) NOT NULL,
 	estimated_delivery_date DATE DEFAULT NULL,
@@ -132,10 +132,12 @@ CREATE TABLE IF NOT EXISTS Package_Proofs (
 CREATE TABLE IF NOT EXISTS Offer (
 	pid INT(10) NOT NULL,
 	courier_id INT(10) NOT NULL,
-	price INT(10),
-	PRIMARY KEY(pid, courier_id),
+	transport_id INT(10) NOT NULL,
+	price DECIMAL(6,2),
+	PRIMARY KEY(pid, courier_id,transport_id),
 	FOREIGN KEY(pid) REFERENCES Package(pid) ON DELETE CASCADE,
-	FOREIGN KEY(courier_id) REFERENCES Courier(user_id) ON DELETE CASCADE
+	FOREIGN KEY(courier_id) REFERENCES Courier(user_id) ON DELETE CASCADE,
+	FOREIGN KEY(transport_id) REFERENCES Transportation(transport_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS Verification (
