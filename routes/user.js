@@ -174,18 +174,21 @@ router.post("/givefeedback", decodeAWT, async(req, res) => {
         res.type('json')
 
         let user_id = req.decoded.user_id
-        let courier_id = req.body.courier_id
+        let transport_id = req.body.transport_id
         let package_id = req.body.package_id
         let message = req.body.message
         let rate = req.body.rate
+        console.log(req.body);
+        console.log(user_id);
 
-        let resultPackage = await package_sql.getCustomerPackagesWithCourier(user_id, package_id, courier_id);
+
         if (req.decoded.type != 0) {
             return res.status(401).json({
                 error: 'User must be customer.'
             })
         }
 
+        let resultPackage = await package_sql.getPackagesFromCustomerTransport(transport_id, user_id)
         if (!resultPackage.length) {
             return res.status(404).json({
                 error: 'Package could not found.'
@@ -193,12 +196,16 @@ router.post("/givefeedback", decodeAWT, async(req, res) => {
 
         }
 
+        console.log(resultPackage[0].status);
+
         if (resultPackage[0].status == 'CREATED' || resultPackage[0].status == 'NEGOTIATED') {
 
             return res.status(412).json({
                 error: 'Package should be at least picked up from courier in order to give a feedback.'
             })
         }
+
+        let courier_id = resultPackage[0].courier_id
 
 
         let resultAddFeedback = await sql.giveFeedback(user_id, courier_id, package_id, message, rate);

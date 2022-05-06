@@ -796,7 +796,7 @@ router.post("/add", decodeAWT, async(req, res) => {
             });
         } else {
 
-            res.status(200).json({
+            res.status(407).json({
                 result: 'Transport could not added.'
             });
         }

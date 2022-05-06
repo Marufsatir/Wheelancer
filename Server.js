@@ -15,34 +15,18 @@ const packageRoute = require("./routes/package")
 const transportRoute = require("./routes/transport");
 const adminRoute = require("./routes/admin");
 
-
 const swaggerDocument = YAML.load('./swagger.yaml');
-
 
 app.use(morgan(":date[clf] :remote-addr :method [:status] :url - :response-time ms"))
 
 app.use(bodyParser.json());
 app.use(cors());
 
-
-
 app.use("/system", systemRoute); //For creating inserting, deleting tables, data.
 app.use("/user", userRoute);
 app.use("/admin", adminRoute);
 app.use("/package", packageRoute);
 app.use("/transport", transportRoute);
-
-
-app.use("/test", async(req, res) => {
-
-
-    res.status(200).json({
-        result: randomCoordinates()
-    })
-
-})
-
-
 
 //For parse errors.
 app.use(function(error, req, res, next) {
@@ -65,4 +49,4 @@ app.use(
     swaggerUi.setup(swaggerDocument, { explorer: true })
 );
 
-app.listen(process.env.PORT, () => console.log(`API is running on http://localhost:${process.env.PORT}`));
+app.listen(process.env.PORT, () => console.log(`API is running on http://${process.env.HOST}:${process.env.PORT}`));

@@ -1,5 +1,0 @@
-DELETE FROM User;
-DELETE FROM Book;
-DELETE FROM Series;
-DELETE FROM Thread;
-DELETE FROM Progress;

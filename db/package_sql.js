@@ -16,7 +16,6 @@ package.checkPackageProofUUID = (UUID) => {
     })
 }
 
-
 package.listPackageProofs = (type, user_id, package_id) => {
 
     return new Promise((resolve, reject) => {
@@ -36,12 +35,9 @@ package.listPackageProofs = (type, user_id, package_id) => {
                 }
                 return resolve(results);
             })
-
         }
-
     })
 }
-
 
 package.getCustomerPackagesWithCourier = (customer_id, package_id, courier_id) => {
 
@@ -55,12 +51,22 @@ package.getCustomerPackagesWithCourier = (customer_id, package_id, courier_id) =
     })
 }
 
-
-
 package.getPackagesFromUserTransport = (transport_id, user_id) => {
 
     return new Promise((resolve, reject) => {
         pool.query("SELECT p.* FROM Transportation t JOIN Package p  ON (t.transport_id = p.transport_id) JOIN Vehicle v ON (t.vehicle_id = v.vehicle_id) WHERE t.transport_id = ? AND courier_id = ?", [transport_id, user_id], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+package.getPackagesFromCustomerTransport = (transport_id, user_id) => {
+
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT p.*, t.courier_id FROM Transportation t JOIN Package p  ON (t.transport_id = p.transport_id) JOIN Vehicle v ON (t.vehicle_id = v.vehicle_id) WHERE t.transport_id = ? AND p.cid = ?", [transport_id, user_id], (err, results) => {
             if (err && err.code != "ER_DUP_ENTRY") {
                 return reject(err);
             }
@@ -92,8 +98,6 @@ package.getPackage = (package_id) => {
         })
     })
 }
-
-
 
 package.updatePackageTransportation = (pid, transport_id) => {
 
