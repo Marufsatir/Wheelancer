@@ -1,18 +1,26 @@
 _id: req_e74cd9386b96433082531dccfa17bd31
 type: Request
 parentId: fld_64db6e1c810146cbabd86d9fd3ce1d4e
-modified: 1651772566534
+modified: 1651792678263
 created: 1651709243103
 url: http://wheelancer.hopto.org:3013/transport/showoffers
 name: Get Offers (Courier & Customer)
 description: ""
 method: GET
 body: {}
-parameters: []
-headers: []
+parameters:
+  - id: pair_c9b2f31855984424b6e1029fdc691e83
+    name: asdasd
+    value: U2FsdGVkX19w/YG8cEaSVzoq1Q4GFA+SMxxKZNBtjQgdd7iPTY1eyBq81S1wWIs9kb/6PDEm+UXVoVMqAG/CPg=
+    description: ""
+headers:
+  - id: pair_ae0b1bf0175a4996b21e1503c8ed496f
+    name: ""
+    value: ""
+    description: ""
 authentication:
   type: bearer
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNzcyNTE1LCJleHAiOjE2NTIzNzczMTV9.Qa2Z3zNZNS-GDg97RPd1Sna5jaSYyb05Qio87Lh0b7Y
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2OSwidHlwZSI6MCwiaWF0IjoxNjUxNjk1NDY3LCJleHAiOjE2NTIzMDAyNjd9.5p-8MSlAnmRyGqlINu3UABHk3peHYnjb_nHqRIdYGMc
 metaSortKey: -1651508996919.7656
 isPrivate: false
 settingStoreCookies: true

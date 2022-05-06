@@ -1,0 +1,32 @@
+_id: req_957047b1fe154e599ac984aa12e5d9b3
+type: Request
+parentId: fld_64db6e1c810146cbabd86d9fd3ce1d4e
+modified: 1651798995700
+created: 1651798939707
+url: http://wheelancer.hopto.org:3013/transport/currentposition
+name: Update Courier's Current Location
+description: ""
+method: PUT
+body:
+  mimeType: application/json
+  text: |-
+    {
+    	"curr_long": 1.13,
+    	"curr_lat": 3.13
+    }
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_587f5b375fab4165860561f54870ca57
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNzg2MjQwLCJleHAiOjE2NTIzOTEwNDB9.Hn-MkC_Sv2HuK1OcGThA5tHbKzIwybzaFtMJkzxKhPM
+metaSortKey: -1651508997054.5312
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

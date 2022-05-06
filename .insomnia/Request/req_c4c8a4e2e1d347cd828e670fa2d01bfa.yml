@@ -1,27 +1,35 @@
 _id: req_c4c8a4e2e1d347cd828e670fa2d01bfa
 type: Request
 parentId: fld_dcf9fc54692445cf933042e6a11b18f2
-modified: 1651695885531
+modified: 1651779879411
 created: 1651672362260
 url: http://wheelancer.hopto.org:3013/package/addcustomerpackage
 name: Add A Package to Customer
 description: ""
 method: POST
-body:
-  mimeType: application/json
-  text: |-
-    {
-    	"vehicle_id": "",
-    	"courier_pos_long": "",
-    	"courier_pos_lat": "",
-    	"departure_date": "",
-    	"arrival_date": ""
-    }
+body: {}
 parameters: []
 headers:
-  - name: Content-Type
-    value: application/json
-    id: pair_e240749a85564dea832aa0eb6b087188
+  - id: pair_620508e880a44642bdad19f16e8c6d8f
+    name: vehicle_id
+    value: "1"
+    description: ""
+  - id: pair_79637af42fe04699b8431ebad0467e5a
+    name: courier_pos_long
+    value: "1.859742"
+    description: ""
+  - id: pair_90f6c20b8391433b84d17f394c538e8d
+    name: courier_pos_lat
+    value: "2.933364"
+    description: ""
+  - id: pair_579eba1e20824369bfb299e7f19a4c24
+    name: departure_date
+    value: "3.859742"
+    description: ""
+  - id: pair_c5d55067601b4bd4a30dbf472dfeb56b
+    name: arrival_date
+    value: "4.933364"
+    description: ""
 authentication:
   type: bearer
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2OSwidHlwZSI6MCwiaWF0IjoxNjUxNjAyMjk2LCJleHAiOjE2NTIyMDcwOTZ9.cI65vKtUHf2bMj0UF03dNFwxPmWuf8jAWhwPxarUosg

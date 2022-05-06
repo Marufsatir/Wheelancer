@@ -1,27 +1,28 @@
-_id: req_3d5cc10d71fd4685b8981c01b8592183
+_id: req_30764a6ed1f740208efc53a993882bac
 type: Request
 parentId: fld_64db6e1c810146cbabd86d9fd3ce1d4e
-modified: 1651779194536
-created: 1651774674112
-url: http://wheelancer.hopto.org:3013/transport/pickupcargo
-name: Pickup Package (Courier)
+modified: 1651793880260
+created: 1651792968439
+url: http://wheelancer.hopto.org:3013/transport/deliverpackage
+name: Deliver Package (Courier)
 description: ""
 method: POST
 body:
-  mimeType: application/json
-  text: |-
-    {
-    	"package_id": 32
-    }
+  mimeType: application/octet-stream
+  fileName: ""
 parameters: []
 headers:
   - name: Content-Type
-    value: application/json
+    value: application/octet-stream
     id: pair_f011d119cd694a10a242be74e6031ac0
+  - id: pair_d84084e4320d4af08e85271fa4c5cf3d
+    name: package_id
+    value: "23"
+    description: ""
 authentication:
   type: bearer
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo3MCwidHlwZSI6MSwiaWF0IjoxNjUxNzcyNTE1LCJleHAiOjE2NTIzNzczMTV9.Qa2Z3zNZNS-GDg97RPd1Sna5jaSYyb05Qio87Lh0b7Y
-metaSortKey: -1651508996907.6074
+metaSortKey: -1651508996907.2412
 isPrivate: false
 settingStoreCookies: true
 settingSendCookies: true

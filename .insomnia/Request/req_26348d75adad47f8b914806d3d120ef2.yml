@@ -1,7 +1,7 @@
 _id: req_26348d75adad47f8b914806d3d120ef2
 type: Request
 parentId: fld_64db6e1c810146cbabd86d9fd3ce1d4e
-modified: 1651702680406
+modified: 1651780009065
 created: 1651674591098
 url: http://wheelancer.hopto.org:3013/transport/nearpackages
 name: Get Near Packages
@@ -15,15 +15,15 @@ parameters:
     description: ""
   - id: pair_61551afd7f754e45bc0a7e83efe05f60
     name: curr_pos_long
-    value: "39.881817"
+    value: "32.8597"
     description: ""
   - id: pair_5f5a973e5bbe461dad5ba4f319113e80
     name: curr_pos_lat
-    value: "32.753892"
+    value: "39.9334"
     description: ""
   - id: pair_6cc6efcbdf8c4caead738be352ce5e9e
     name: radius
-    value: "1000"
+    value: "100"
     description: ""
   - id: pair_ecdde4af45b345cfa294ef709bba7d7b
     name: ""
