@@ -190,11 +190,12 @@ router.post("/addcustomerpackage", upload.any(), decodeAWT, async(req, res) => {
         let d_long = req.headers.d_long
         let d_lat = req.headers.d_lat
         let receiver_email = req.headers.receiver_email
-        let s_city = req.headers.s_city
-        let d_city = req.headers.d_city
+        let s_city = req.headers.s_city.toLocaleUpperCase()
+        let d_city = req.headers.d_city.toLocaleUpperCase()
         let receiver_fullname = req.headers.receiver_fullname
 
 
+        console.log('long=>', s_long, 'lat=>', s_lat);
         let resultAddPackage = await package_sql.addPackageToCustomer(user_id, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiver_email, s_city, d_city, receiver_fullname);
 
         if (resultAddPackage && resultAddPackage.affectedRows) {

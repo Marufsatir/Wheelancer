@@ -5,6 +5,19 @@ let transport = {};
 
 
 
+transport.updateCourierPosition = (courier_id, long, lat) => {
+
+    return new Promise((resolve, reject) => {
+        pool.query("UPDATE Transportation SET last_update_date = CURRENT_TIMESTAMP(), courier_pos_long = ? , courier_pos_lat = ? WHERE courier_id = ? AND status <> 'FINISHED';", [long, lat, courier_id], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+
+}
+
 transport.getAllPackagesInCity = (s_city) => {
 
     return new Promise((resolve, reject) => {
@@ -22,7 +35,7 @@ transport.getAllPackagesInCity = (s_city) => {
 transport.getCustomerOffers = (customer_id) => {
 
     return new Promise((resolve, reject) => {
-        pool.query("SELECT  IF( ISNULL(p.transport_id), 'WAITING', 'ACCEPTED') as accept_status, o.*, c.avg_rating,u.registration_date , v.*, CONCAT(u.name, ' ', u.surname) as courier_full_name FROM Offer o  JOIN Package p ON (o.pid = p.pid) JOIN Transportation t ON (p.transport_id= t.transport_id) JOIN Courier c ON (t.courier_id = c.user_id) JOIN `User` u ON ( c.user_id = u.user_id) JOIN Vehicle v ON (t.vehicle_id = v.vehicle_id) WHERE p.cid = ?", [customer_id], (err, results) => {
+        pool.query("SELECT  IF( ISNULL(p.transport_id), 'WAITING', 'ACCEPTED') as accept_status, o.*, IF( ISNULL(c.avg_rating), 'NONE', c.avg_rating) as avg_rating ,u.registration_date , v.*, CONCAT(u.name, ' ', u.surname) as courier_full_name FROM Offer o  JOIN Transportation t ON (o.transport_id= t.transport_id) JOIN Courier c ON (t.courier_id = c.user_id) JOIN `User` u ON ( c.user_id = u.user_id) JOIN Vehicle v ON (t.vehicle_id = v.vehicle_id) JOIN Package p ON (p.pid = o.pid) WHERE p.cid = ?", [customer_id], (err, results) => {
             if (err && err.code != "ER_DUP_ENTRY") {
                 return reject(err);
             }
@@ -58,10 +71,10 @@ transport.removeUnwantedOffersExceptGiven = (pid, courier_id, transport_id) => {
 
 }
 
-transport.decreaseRemainingValue = (transport_id, volume, weight) => {
+transport.upIncrRemainingValue = (transport_id, volume, weight) => {
 
     return new Promise((resolve, reject) => {
-        pool.query("UPDATE Transportation SET remaining_volume = remaining_volume - ?, remaining_weight = remaining_weight - ? WHERE transport_id = ?;", [volume, weight, transport_id], (err, results) => {
+        pool.query("UPDATE Transportation SET remaining_volume = remaining_volume + ?, remaining_weight = remaining_weight + ? WHERE transport_id = ?;", [volume, weight, transport_id], (err, results) => {
             if (err && err.code != "ER_DUP_ENTRY") {
                 return reject(err);
             }
@@ -83,6 +96,18 @@ transport.cancelOffer = (pid, courier_id, transport_id) => {
         })
     })
 
+}
+
+transport.getTransportFromCustomerPackage = (customer_id, package_id) => {
+
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT t.* FROM Package p JOIN Transportation t ON (p.transport_id = t.transport_id) WHERE p.cid = ? AND p.pid = ?", [customer_id, package_id], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
 }
 
 transport.getOfferDetails = (pid, courier_id, transport_id) => {

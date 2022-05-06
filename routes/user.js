@@ -1,5 +1,7 @@
 const express = require("express");
 const sql = require("../db/user_sql");
+const transport_sql = require("../db/transport_sql");
+const package_sql = require("../db/package_sql")
 var jwt = require('jsonwebtoken');
 let crypto = require('crypto');
 const nodemailer = require("nodemailer");
@@ -157,6 +159,100 @@ router.post("/adddocument", upload.any(), decodeAWT, async(req, res) => {
         } else {
             res.status(402).json({
                 error: 'You have already uploaded your document.'
+            })
+        }
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+})
+
+// Give feedback to a courier
+router.post("/givefeedback", decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+        let user_id = req.decoded.user_id
+        let courier_id = req.body.courier_id
+        let package_id = req.body.package_id
+        let message = req.body.message
+        let rate = req.body.rate
+
+        let resultPackage = await package_sql.getCustomerPackagesWithCourier(user_id, package_id, courier_id);
+        if (req.decoded.type != 0) {
+            return res.status(401).json({
+                error: 'User must be customer.'
+            })
+        }
+
+        if (!resultPackage.length) {
+            return res.status(404).json({
+                error: 'Package could not found.'
+            })
+
+        }
+
+        if (resultPackage[0].status == 'CREATED' || resultPackage[0].status == 'NEGOTIATED') {
+
+            return res.status(412).json({
+                error: 'Package should be at least picked up from courier in order to give a feedback.'
+            })
+        }
+
+
+        let resultAddFeedback = await sql.giveFeedback(user_id, courier_id, package_id, message, rate);
+
+
+        if (!resultAddFeedback || !resultAddFeedback.affectedRows) {
+            return res.status(409).json({
+                error: 'Feedback could not given probably already given.'
+            })
+
+        }
+        let resultUpdateAvgScore = await sql.autoUpdateAverageScore(courier_id);
+
+
+        if (!resultAddFeedback || !resultUpdateAvgScore.affectedRows) {
+            return res.status(407).json({
+                error: 'Courier avg score could not be updated.'
+            })
+
+        }
+
+        res.status(200).json({
+            result: 'Feedback successfully given.'
+        })
+
+    } catch (error) {
+        res.sendStatus(500);
+        console.log(error)
+    }
+})
+
+// Gets all feedback data for courier.
+router.get("/myfeedbacks", decodeAWT, async(req, res) => {
+
+    try {
+        res.type('json')
+
+        let user_id = req.decoded.user_id
+
+        if (req.decoded.type != 1) {
+            return res.status(401).json({
+                error: 'User must be courier.'
+            })
+        }
+
+        let resultMyFeedbacks = await sql.getMyFeedbacks(user_id);
+
+        if (resultMyFeedbacks && resultMyFeedbacks.length) {
+            res.status(200).json({
+                result: resultMyFeedbacks
+            })
+        } else {
+            res.status(200).json({
+                result: []
             })
         }
     } catch (error) {

@@ -30,7 +30,7 @@ package.listPackageProofs = (type, user_id, package_id) => {
             })
         } else {
 
-            pool.query("SELECT pp.proof_id, pp.type, pp.image, pp.date FROM Package_Proofs pp  JOIN Package p ON (p.pid = pp.pid) JOIN Transportation t ON (p.transport_id = t.transport_id) WHERE  t.courier_id = ? AND pp.pid = ?", [user_id, package_id], (err, results) => {
+            pool.query("SELECT pp.proof_id, pp.type, pp.image, pp.date FROM Package_Proofs pp WHERE pp.pid = ?", [package_id], (err, results) => {
                 if (err && err.code != "ER_DUP_ENTRY") {
                     return reject(err);
                 }
@@ -41,6 +41,20 @@ package.listPackageProofs = (type, user_id, package_id) => {
 
     })
 }
+
+
+package.getCustomerPackagesWithCourier = (customer_id, package_id, courier_id) => {
+
+    return new Promise((resolve, reject) => {
+        pool.query("SELECT p.* FROM Package p JOIN Transportation t ON (p.transport_id = t.transport_id) WHERE p.cid = ? AND p.pid = ? AND  t.courier_id = ?", [customer_id, package_id, courier_id], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
 
 
 package.getPackagesFromUserTransport = (transport_id, user_id) => {
@@ -160,7 +174,7 @@ package.addPackageProof = (pid, type, image) => {
 package.addPackageToCustomer = (cid, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiverEmail, s_city, d_city, receiver_fullname) => {
 
     return new Promise((resolve, reject) => {
-        pool.query("INSERT INTO Package(cid,transport_id,length,width,height,weight,type,s_long,s_lat,d_long,d_lat,receiver_email,estimated_delivery_date,chat_channel_id,s_city, d_city, receiver_fullname) VALUES(?,NULL,?,?,?,?,?,?,?,?,?,?,NULL,NULL,?, ?, ?)", [cid, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiverEmail, s_city, d_city, receiver_fullname], (err, results) => {
+        pool.query("INSERT INTO Package(cid,length,width,height,weight,type,s_long,s_lat,d_long,d_lat,receiver_email,s_city, d_city, receiver_fullname) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [cid, length, width, height, weight, type, s_long, s_lat, d_long, d_lat, receiverEmail, s_city, d_city, receiver_fullname], (err, results) => {
             if (err && err.code != "ER_DUP_ENTRY") {
                 return reject(err);
             }
