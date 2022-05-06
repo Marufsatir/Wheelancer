@@ -1,0 +1,31 @@
+_id: req_f8034b79d6d64921a26b1d3bdcd78430
+type: Request
+parentId: fld_64db6e1c810146cbabd86d9fd3ce1d4e
+modified: 1651807687748
+created: 1651807548228
+url: http://wheelancer.hopto.org:3013/transport/getcourierlocation
+name: Get Courier's Last Known Postition
+description: ""
+method: GET
+body: {}
+parameters:
+  - id: pair_6ff4f01c904848b291d40493c70fbd80
+    name: package_id
+    value: "23"
+    description: ""
+headers:
+  - id: pair_ae0b1bf0175a4996b21e1503c8ed496f
+    name: ""
+    value: ""
+    description: ""
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2OSwidHlwZSI6MCwiaWF0IjoxNjUxNjk1NDY3LCJleHAiOjE2NTIzMDAyNjd9.5p-8MSlAnmRyGqlINu3UABHk3peHYnjb_nHqRIdYGMc
+metaSortKey: -1651508996915.957
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global
