@@ -147,6 +147,42 @@ user.addDocument = (user_id, document) => {
     })
 }
 
+user.giveFeedback = (customer_id, courier_id, package_id, message, rate) => {
+    return new Promise((resolve, reject) => {
+
+        pool.query("INSERT INTO Feedback(customer_id, courier_id,pid,message, rate) VALUES(?,?,?,?,?)", [customer_id, courier_id, package_id, message, rate], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+user.getMyFeedbacks = (courier_id) => {
+    return new Promise((resolve, reject) => {
+
+        pool.query("SELECT f.*, u.name, u.surname, u.registration_date FROM Feedback f JOIN User u ON(f.customer_id = u.user_id) WHERE courier_id = ?", [courier_id], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
+user.autoUpdateAverageScore = (courier_id) => {
+    return new Promise((resolve, reject) => {
+
+        pool.query("UPDATE Courier SET avg_rating = (SELECT AVG(f.rate) as average_score FROM Feedback f WHERE f.courier_id = ?) WHERE user_id = ?", [courier_id, courier_id], (err, results) => {
+            if (err && err.code != "ER_DUP_ENTRY") {
+                return reject(err);
+            }
+            return resolve(results);
+        })
+    })
+}
+
 user.getMyDocument = (user_id) => {
     return new Promise((resolve, reject) => {
 
