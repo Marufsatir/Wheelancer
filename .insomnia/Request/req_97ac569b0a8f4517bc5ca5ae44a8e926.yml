@@ -1,0 +1,35 @@
+_id: req_97ac569b0a8f4517bc5ca5ae44a8e926
+type: Request
+parentId: fld_d42342d057de4d7597c174353de47331
+modified: 1651806258685
+created: 1651805612625
+url: http://wheelancer.hopto.org:3013/user/givefeedback
+name: Give Feedback
+description: ""
+method: POST
+body:
+  mimeType: application/json
+  text: |+
+    {
+    	"courier_id": 70,
+    	"package_id": 23,
+    	"message": "Good",
+    	"rate": 3.0
+    }
+
+parameters: []
+headers:
+  - name: Content-Type
+    value: application/json
+    id: pair_f011d119cd694a10a242be74e6031ac0
+authentication:
+  type: bearer
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo2OSwidHlwZSI6MCwiaWF0IjoxNjUxODA1NjU5LCJleHAiOjE2NTI0MTA0NTl9.UGvHwe_6IcOJq1z5zpaFx-7PhzyejXlMB4iN3mO-H6o
+metaSortKey: -1651707415827
+isPrivate: false
+settingStoreCookies: true
+settingSendCookies: true
+settingDisableRenderRequestBody: false
+settingEncodeUrl: true
+settingRebuildPath: true
+settingFollowRedirects: global

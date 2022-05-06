@@ -1,7 +1,7 @@
 _id: req_ee543707aab947559257eeb992ca2463
 type: Request
 parentId: fld_d42342d057de4d7597c174353de47331
-modified: 1651798985456
+modified: 1651805659902
 created: 1651413502279
 url: http://wheelancer.hopto.org:3013/user/login
 name: Login
@@ -11,7 +11,7 @@ body:
   mimeType: application/json
   text: |-
     {
-      "email": "m.maruf.99@hotmail.com",
+      "email": "umitcivi3@gmail.com",
       "password": "616161"
     }
 parameters: []
